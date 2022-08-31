@@ -24,7 +24,7 @@ s3_bucket = os.environ["S3_BUCKET_NAME"]
 if not s3_bucket:
     raise ValueError("Environment variable S3_BUCKET_NAME was not found")
 
-func_filename = os.environ["FUNC_FILENAME"]
+func_filename = os.environ["COVALENT_TASK_FUNC_FILENAME"]
 if not func_filename:
     raise ValueError("Environment variable FUNC_FILENAME was not found")
 
