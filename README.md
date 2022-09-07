@@ -13,8 +13,14 @@
 
 To use this plugin with Covalent, install it with `pip`:
 
-```
+```bash
 pip install covalent-aws-plugins
+```
+
+import with
+
+```python
+from covalent_aws_plugins import AWSExecutor
 ```
 
 ## Release Notes
