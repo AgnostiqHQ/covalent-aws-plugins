@@ -43,12 +43,12 @@ class AWSExecutor(RemoteExecutor):
         if region:
             self.region = region
         else:
-            self.region = os.getenv("AWS_DEFAULT_REGION", None)
+            self.region = os.getenv("AWS_DEFAULT_REGION")
 
         if profile:
             self.profile = profile
         else:
-            self.profile = os.getenv("AWS_PROFILE", "default")
+            self.profile = os.getenv("AWS_PROFILE")
 
         if credentials_file:
             self.credentials_file = credentials_file
