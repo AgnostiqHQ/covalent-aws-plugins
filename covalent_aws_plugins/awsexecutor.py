@@ -39,7 +39,7 @@ class AWSExecutor(RemoteExecutor):
 
         if s3_bucket_name:
             self.s3_bucket_name = s3_bucket_name
-        
+
         if region:
             self.region = region
         else:
@@ -49,7 +49,7 @@ class AWSExecutor(RemoteExecutor):
             self.profile = profile
         else:
             self.profile = os.getenv("AWS_PROFILE", "default")
-        
+
         if credentials_file:
             self.credentials_file = credentials_file
         else:
@@ -73,7 +73,7 @@ class AWSExecutor(RemoteExecutor):
         if credentials_file:
             os.environ["AWS_SHARED_CREDENTIALS_FILE"] = credentials_file
         self._credentials_file = credentials_file or None
-    
+
     def boto_session_options(self) -> Dict[str,str]:
         """
         Returns a dictionary of kwargs to populate a new boto3.Session() instance with proper auth, region, and profile options.
@@ -105,5 +105,5 @@ class AWSExecutor(RemoteExecutor):
         except ClientError as e:
             if raise_exception:
                 raise InvalidCredentials(e, self.profile, self.credentials_file)
-            else: 
+            else:
                 return False
