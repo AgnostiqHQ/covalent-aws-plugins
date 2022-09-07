@@ -1,19 +1,10 @@
-FROM python:3.8-slim-bullseye AS build
-
-RUN apt-get update \
-  && mkdir /covalent \
-  && python -m venv --copies /covalent/.venv \
-  && . /covalent/.venv/bin/activate \
-  && pip install --upgrade pip \
-  && pip install covalent
-
-FROM python:3.8-slim-bullseye AS prod
+ARG COVALENT_BASE_IMAGE
+FROM ${COVALENT_BASE_IMAGE}
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends rsync \
-  && rm -rf /var/lib/apt/lists/*
-
-COPY --from=build /covalent/.venv /covalent/.venv
+  && rm -rf /var/lib/apt/lists/* \
+  && pip install boto3
 
 RUN cat <<EOF > /covalent/exec.py
 import os
