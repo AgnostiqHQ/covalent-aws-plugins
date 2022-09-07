@@ -25,3 +25,4 @@
 
 - `Dockerfile` for the base docker image for all AWS cloud executor plugins
 - `CHANGELOG` file
+- Added first iteration of `AWSExecutor` and AWS Executor exceptions
