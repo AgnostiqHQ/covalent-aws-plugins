@@ -18,7 +18,6 @@
 #
 # Relief from the License may be granted by purchasing a commercial license.
 
-from ast import List
 import os
 from typing import Any, Callable, Dict, Tuple, Union
 import boto3
