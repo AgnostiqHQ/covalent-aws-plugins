@@ -46,7 +46,7 @@ setup_info = {
     "long_description_content_type": "text/markdown",
     "include_package_data": True,
     "install_requires": [
-        "covalent @ git+https://github.com/AgnostiqHQ/covalent.git@ffa59c66acfd4734dc84165ef2dc2f61fc4e1a29#egg=covalent",
+        "covalent @ git+https://github.com/AgnostiqHQ/covalent.git@develop#egg=covalent",
         "boto3==1.24.35"
     ],
     "classifiers": [
