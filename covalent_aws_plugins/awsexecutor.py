@@ -29,6 +29,17 @@ from covalent.executor.executor_plugins.remote_executor import RemoteExecutor
 """Base Executor class for all AWS Executor Plugins"""
 
 class AWSExecutor(RemoteExecutor):
+    """
+    AWSExecutor which provides a base class for all other AWS Executors to inherit from.
+
+    Attributes:
+        profile: (optional) Named AWS profile, default profile is "default" or defined from AWS_PROFILE env var.
+        credentials_file: (optional) Location of AWS credentials file, default is $HOME/.aws/credentials or defined from AWS_SHARED_CREDENTIALS_FILE env var
+        region: (optional) Region to use in order to access AWS Resources, default is defined from ~/.aws/config or defined from AWS_DEFAULT_REGION env var
+        s3_bucket_name: (May be required depending on executor) S3 Bucket Name to use in order to store covalent execution artifacts.
+        execution_role: (May be required depending on executor) AWS IAM Role for covalent to assume when executing tasks.
+        log_group_name: (May be required depending on executor) AWS Log Group which will hold any relevant logs regarding workflow execution.
+    """
 
     def __init__(self, profile: str = None, region: str = None, s3_bucket_name: str = None, execution_role: str = None, log_group_name: str = None, credentials_file: str = None, **kwargs) -> None:
 
