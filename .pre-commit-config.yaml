@@ -18,11 +18,34 @@
 #
 # Relief from the License may be granted by purchasing a commercial license.
 
+exclude: ^(.git/|.tox/|CHANGELOG.md|VERSION)
+default_stages: [commit]
+fail_fast: true
 
-## [UNRELEASED]
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+        args: ["--maxkb=10000"]
+      - id: check-merge-conflict
 
-### Added
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0-alpha.0
+    hooks:
+      - id: prettier
+        types: [yaml]
 
-- `Dockerfile` for the base docker image for all AWS cloud executor plugins
-- `CHANGELOG` file
-- Added first iteration of `AWSExecutor` and AWS Executor exceptions
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.74.1
+    hooks:
+      - id: terraform_fmt
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.3.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        verbose: true
