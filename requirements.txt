@@ -1,2 +1,2 @@
-git+https://github.com/AgnostiqHQ/covalent.git@develop#egg=covalent
+covalent==0.177.0.post1.dev0
 boto3==1.24.35

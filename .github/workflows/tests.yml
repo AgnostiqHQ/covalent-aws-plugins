@@ -1,0 +1,143 @@
+# Copyright 2021 Agnostiq Inc.
+#
+# This file is part of Covalent.
+#
+# Licensed under the GNU Affero General Public License 3.0 (the "License").
+# A copy of the License may be obtained with this software package or at
+#
+#      https://www.gnu.org/licenses/agpl-3.0.en.html
+#
+# Use of this file is prohibited except in compliance with the License. Any
+# modifications or derivative works of this file must retain this copyright
+# notice, and modified files must contain a notice indicating that they have
+# been altered from the originals.
+#
+# Covalent is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the License for more details.
+#
+# Relief from the License may be granted by purchasing a commercial license.
+
+name: tests
+
+on:
+  pull_request:
+  workflow_run:
+    workflows: [changelog]
+    types: [completed]
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        container:
+          - python:3.8-buster
+          - python:3.8-bullseye
+          - python:3.9-buster
+          - python:3.9-bullseye
+          - python:3.10-buster
+          - python:3.10-bullseye
+          - image: "centos/python-38-centos7"
+            options: "--user root"
+        experimental: [false]
+        include:
+          - os: macos-latest
+            python-version: "3.8"
+            experimental: false
+          - os: macos-latest
+            python-version: "3.9"
+            experimental: false
+          - os: macos-latest
+            python-version: "3.10"
+            experimental: false
+    container: ${{ matrix.container }}
+    continue-on-error: ${{ matrix.experimental }}
+    outputs:
+      release: ${{ steps.push.outputs.release }}
+    steps:
+      - name: Check out head
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false 
+
+      - name: Set up Python
+        if: matrix.os == 'macos-latest'
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python dependencies
+        run: |
+          pip install --no-cache-dir -r requirements.txt
+          pip install --no-cache-dir -r tests/requirements.txt
+      
+      - name: Install Covalent
+        run: pip install covalent --pre
+               
+      - name: Build distribution
+        run: python setup.py sdist
+
+      - name: Validate plugin
+        run: |
+          VERSION="$(cat ./VERSION)"
+          cd dist
+          tar xzf covalent-aws-plugins-${VERSION}.tar.gz
+          diff -r covalent-aws-plugins-${VERSION}/covalent_aws_plugins/ ../covalent_aws_plugins/
+          rm -rf covalent-aws-plugins-${VERSION}/
+
+      - name: Install plugin
+        run: |
+          VERSION="$(cat ./VERSION)"
+          pip install ./dist/covalent-aws-plugins-${VERSION}.tar.gz
+
+      - name: Run tests
+        run: PYTHONPATH=$PWD/tests pytest -vv tests/ --cov=covalent_aws_plugins
+
+      - name: Generate coverage report
+        run: coverage xml -o coverage.xml
+      
+      - name: Upload report to Codecov
+        if: >
+          matrix.os == 'ubuntu-latest'
+          && matrix.container == 'python:3.8-buster'
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          name: "Plugin Unit Tests"
+
+      - name: Get latest release
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+        if: github.ref == 'refs/heads/develop' && matrix.os == 'ubuntu-latest' && matrix.container == 'python:3.8-buster'
+        with:
+          semver_only: true
+
+      - name: Push to main
+        id: push
+        if: github.ref == 'refs/heads/develop' && matrix.os == 'ubuntu-latest' && matrix.container == 'python:3.8-buster'
+        run: |
+          MASTER_VERSION="$(echo ${{ steps.get-latest-tag.outputs.tag }} | cut -c2- )"
+          VERSION="$(cat ./VERSION)"
+          release=false
+          if [ "$MASTER_VERSION" = "$VERSION" ] ; then
+            echo "$VERSION has been previously released."
+          else
+            git config user.name "CovalentOpsBot"
+            git config user.email "covalentopsbot@users.noreply.github.com"
+            git remote set-url origin https://${{ secrets.COVALENT_OPS_BOT_TOKEN }}@github.com/AgnostiqHQ/covalent-aws-plugins.git
+            git push origin HEAD:main
+            release=true
+          fi
+          echo "RELEASE=$release" >> $GITHUB_ENV
+          echo "::set-output name=release::$release"
+         
+  release:
+    needs: tests
+    if: github.ref == 'refs/heads/develop' && needs.tests.outputs.release == 'true'
+    uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/release.yml@develop
+    secrets: inherit
+    with:
+      prerelease: true

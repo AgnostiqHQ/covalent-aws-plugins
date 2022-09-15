@@ -45,10 +45,7 @@ setup_info = {
     "long_description": open("README.md").read(),
     "long_description_content_type": "text/markdown",
     "include_package_data": True,
-    "install_requires": [
-        "covalent @ git+https://github.com/AgnostiqHQ/covalent.git@develop#egg=covalent",
-        "boto3==1.24.35"
-    ],
+    "install_requires": required,
     "classifiers": [
         "Development Status :: 4 - Beta",
         "Environment :: Console",
@@ -69,7 +66,7 @@ setup_info = {
         "Topic :: Scientific/Engineering :: Interface Engine/Protocol Translator",
         "Topic :: Software Development",
         "Topic :: System :: Distributed Computing",
-    ]
+    ],
 }
 
 if __name__ == "__main__":
