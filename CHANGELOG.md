@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added license workflow
 
-## [0.1.0] - 2022-09-15
+## [0.1.0rc0] - 2022-09-15
 
 ### Added
 
