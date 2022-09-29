@@ -28,7 +28,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from covalent_aws_plugins import AWSExecutor
+from covalent_aws_plugins.awsexecutor import AWSExecutor
 from covalent_aws_plugins.exceptions.invalid_credentials import InvalidCredentials
 
 @pytest.fixture
