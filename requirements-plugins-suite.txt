@@ -1,5 +1,5 @@
-covalent-awsbatch-plugin==0.11.0
-covalent-ecs-plugin==0.11.0
+covalent-awsbatch-plugin==0.14.1rc0
+covalent-ecs-plugin==0.13.0rc0
 covalent-ec2-plugin==0.4.0
-covalent-awslambda-plugin==0.5.0
-covalent-braket-plugin==0.4.1
+covalent-awslambda-plugin==0.8.3rc0
+covalent-braket-plugin==0.6.1rc0
