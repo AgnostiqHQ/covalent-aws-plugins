@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Added 
+
+- Logic to check if only the base requirements file in the plugins repo is to be installed. When not True, the `requirements-plugins-suite.txt` packages are also installed in addition to the `requirements.txt` packages.
+- Added aws plugins to be installed in `requirement-plugins-suite.txt`.
+
 ## [0.1.0] - 2022-09-15
 
 ### Added

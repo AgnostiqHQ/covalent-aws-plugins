@@ -1,0 +1,3 @@
+covalent-awsbatch-plugin==0.14.0rc0
+covalent-ecs-plugin==0.11.0rc0
+covalent-ssh-plugin==0.14.0rc0
