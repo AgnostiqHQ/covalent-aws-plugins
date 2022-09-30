@@ -110,9 +110,8 @@ class AWSExecutor(RemoteExecutor):
         Raises:
             InvalidCredentials: If AWS STS Client get_caller_identity() fails
         """
-        sts = boto3.Session(**self.boto_session_options()).client("sts")
-
         try:
+            sts = boto3.Session(**self.boto_session_options()).client("sts")
             return sts.get_caller_identity()
         except ClientError as e:
             if raise_exception:
