@@ -171,5 +171,5 @@ class TestAWSExecutor:
             identity = executor._validate_credentials(raise_exception=True)
             assert identity == CALLER_IDENTITY_MOCK
         else:
-            with pytest.raises(InvalidCredentials, NoCredentialsError):
+            with pytest.raises(NoCredentialsError):
                 executor._validate_credentials(raise_exception=True)
