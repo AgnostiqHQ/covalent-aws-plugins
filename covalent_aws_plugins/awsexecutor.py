@@ -113,13 +113,13 @@ class AWSExecutor(RemoteExecutor):
         try:
             sts = boto3.Session(**self.boto_session_options()).client("sts")
             return sts.get_caller_identity()
-        except ClientError as e:
-            if raise_exception:
-                raise InvalidCredentials(e, self.profile, self.credentials_file) from e
-            else:
-                return False
         except NoCredentialsError as e:
             if raise_exception:
                 raise
+            else:
+                return False
+        except ClientError as e:
+            if raise_exception:
+                raise InvalidCredentials(e, self.profile, self.credentials_file) from e
             else:
                 return False
