@@ -121,6 +121,6 @@ class AWSExecutor(RemoteExecutor):
                 return False
         except NoCredentialsError as e:
             if raise_exception:
-                raise InvalidCredentials(e, self.profile, self.credentials_file) from e
+                raise
             else:
                 return False
