@@ -22,12 +22,11 @@
 
 import os
 from pathlib import Path
-import sys
 from unittest import mock
-from unittest.mock import MagicMock
 
 import pytest
 
+from botocore.exceptions import NoCredentialsError
 from covalent_aws_plugins.awsexecutor import AWSExecutor
 from covalent_aws_plugins.exceptions.invalid_credentials import InvalidCredentials
 
@@ -172,5 +171,5 @@ class TestAWSExecutor:
             identity = executor._validate_credentials(raise_exception=True)
             assert identity == CALLER_IDENTITY_MOCK
         else:
-            with pytest.raises(InvalidCredentials):
+            with pytest.raises(InvalidCredentials, NoCredentialsError):
                 executor._validate_credentials(raise_exception=True)
