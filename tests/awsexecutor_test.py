@@ -143,14 +143,25 @@ class TestAWSExecutor:
     @mock.patch.dict(os.environ, {}, clear=True)
     def test_validate_credentials(self, mocker, MockAWSExecutor, is_credentials_valid):
 
+        boto3_mock = mocker.patch("covalent_aws_plugins.awsexecutor.boto3")
+
         CALLER_IDENTITY_MOCK = {
-                'Account': '123',
-                'Arn': 'arn:aws:iam::123:user/Alice',
-                'UserId': 'USERID123'
+            'Account': '123',
+            'Arn': 'arn:aws:iam::123:user/Alice',
+            'UserId': 'USERID123'
+        }
+
+        AWS_ERROR_RESPONSE_MOCK = {
+            "Error": {
+                "Message": "Some Error",
+                "Code": 123
             }
+        }
+
         if is_credentials_valid:
-            boto3_mock = mocker.patch("covalent_aws_plugins.awsexecutor.boto3")
             boto3_mock.Session().client().get_caller_identity.return_value = CALLER_IDENTITY_MOCK
+        else:
+            boto3_mock.Session().client().get_caller_identity.side_effect = ClientError(error_response=AWS_ERROR_RESPONSE_MOCK,operation_name="some op")
 
         executor = MockAWSExecutor()
 
