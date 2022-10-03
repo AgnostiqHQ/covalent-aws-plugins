@@ -19,7 +19,7 @@
 # Relief from the License may be granted by purchasing a commercial license.
 
 import os
-from typing import Any, Callable, Dict, Tuple, Union
+from typing import Dict, Union
 import boto3
 
 from covalent_aws_plugins.exceptions.client_exception import ClientError
@@ -109,12 +109,11 @@ class AWSExecutor(RemoteExecutor):
         Raises:
             InvalidCredentials: If AWS STS Client get_caller_identity() fails
         """
-        sts = boto3.Session(**self.boto_session_options()).client("sts")
         try:
-            identity = sts.get_caller_identity()
-            return identity
+            sts = boto3.Session(**self.boto_session_options()).client("sts")
+            return sts.get_caller_identity()
         except ClientError as e:
             if raise_exception:
-                raise InvalidCredentials(e, self.profile, self.credentials_file)
+                raise InvalidCredentials(e, self.profile, self.credentials_file) from e
             else:
                 return False

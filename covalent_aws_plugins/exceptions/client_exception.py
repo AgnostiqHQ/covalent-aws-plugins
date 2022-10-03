@@ -9,6 +9,7 @@ class AWSClientException(Exception):
     """
 
     def __init__(self, client_error: ClientError, message: str = 'Error'):
+
         self.client_code = client_error.response['Error']['Code']
         self.client_message = client_error.response['Error']['Message']
         super().__init__(message)

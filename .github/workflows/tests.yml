@@ -53,6 +53,8 @@ jobs:
           - os: macos-latest
             python-version: "3.10"
             experimental: false
+    env: 
+      BASE_COVALENT_AWS_PLUGINS_ONLY: "True"
     container: ${{ matrix.container }}
     continue-on-error: ${{ matrix.experimental }}
     outputs:
