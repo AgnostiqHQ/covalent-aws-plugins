@@ -26,8 +26,8 @@ from unittest import mock
 
 import pytest
 
-from botocore.exceptions import NoCredentialsError
 from covalent_aws_plugins.awsexecutor import AWSExecutor
+from covalent_aws_plugins.exceptions.client_exception import ClientError
 from covalent_aws_plugins.exceptions.invalid_credentials import InvalidCredentials
 
 @pytest.fixture
@@ -182,5 +182,5 @@ class TestAWSExecutor:
             identity = executor._validate_credentials(raise_exception=True)
             assert identity == CALLER_IDENTITY_MOCK
         else:
-            with pytest.raises(NoCredentialsError):
+            with pytest.raises(InvalidCredentials):
                 executor._validate_credentials(raise_exception=True)

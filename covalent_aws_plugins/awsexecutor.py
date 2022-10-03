@@ -22,7 +22,6 @@ import os
 from typing import Dict, Union
 import boto3
 
-from botocore.exceptions import NoCredentialsError
 from covalent_aws_plugins.exceptions.client_exception import ClientError
 from covalent_aws_plugins.exceptions.invalid_credentials import InvalidCredentials
 from covalent.executor.executor_plugins.remote_executor import RemoteExecutor
@@ -113,11 +112,6 @@ class AWSExecutor(RemoteExecutor):
         try:
             sts = boto3.Session(**self.boto_session_options()).client("sts")
             return sts.get_caller_identity()
-        except NoCredentialsError as e:
-            if raise_exception:
-                raise
-            else:
-                return False
         except ClientError as e:
             if raise_exception:
                 raise InvalidCredentials(e, self.profile, self.credentials_file) from e
