@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Changed
+
+- Added back import of `AWSExecutor` in `covalent_aws_plugins/__init__.py` to enable `from covalent_aws_plugins import AWSExecutor`.
+
 ## [0.2.0] - 2022-10-03
 ### Operations
 
