@@ -29,7 +29,7 @@ pip install covalent-aws-plugins
 
 ## Included Plugins
 
-While each plugin can be seperately installed, installing the above pip package installs all of the below plugins.
+While each plugin can be seperately installed installing the above pip package installs all of the below plugins.
 
 | | Plugin Name | Use Case | Example Usage |
 |---|-------------|-------------|---|
