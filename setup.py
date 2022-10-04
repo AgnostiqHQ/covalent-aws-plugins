@@ -77,5 +77,5 @@ setup_info = {
 
 if __name__ == "__main__":
     setup(**setup_info)
-    os.environ["BASE_COVALENT_AWS_PLUGINS_ONLY"] = "False"
+    os.system("export BASE_COVALENT_AWS_PLUGINS_ONLY=False")
     
