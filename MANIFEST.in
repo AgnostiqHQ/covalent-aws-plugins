@@ -1,4 +1,3 @@
 include VERSION
 include requirements.txt
 include requirements-plugins-suite.txt
-recursive-exclude tests/ *
