@@ -83,6 +83,6 @@ setup_info = {
 
 if __name__ == "__main__":
     setup(**setup_info)
-    with open("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY", "w") as f:
-        f.write("False")
+    if os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
+        os.remove("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY")
     

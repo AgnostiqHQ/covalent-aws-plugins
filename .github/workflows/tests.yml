@@ -71,6 +71,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Set BASE_COVALENT_AWS_PLUGINS_ONLY
+        uses: DamianReeves/write-file-action@master
+        with:
+          path: /tmp/BASE_COVALENT_AWS_PLUGINS_ONLY
+          contents: |
+            True
+          write-mode: overwrite
+
       - name: Install Python dependencies
         run: |
           pip install --no-cache-dir -r requirements.txt
