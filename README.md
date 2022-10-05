@@ -159,10 +159,16 @@ def workflow(n):
 	return compute_pi(n)
 
 
-dispatch_id = ct.dispatch(workflow)(1000000000)
+dispatch_id = ct.dispatch(workflow)(100000000)
 result = ct.get_result(dispatch_id=dispatch_id, wait=True)
-print(result)
+print(result.result)
 
+```
+
+Which should output
+
+```
+3.141592643589326
 ```
 
 
