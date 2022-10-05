@@ -11,6 +11,8 @@
 
 ## Covalent AWS Plugins
 
+<img src="./doc/static/covalent-ec2-code-example.png" width="400px" align="right">
+
 Covalent is a python based workflow orchestration tool used to execute HPC and quantum tasks in heterogenous environments.
 
 By installing Covalent AWS Plugins users can leverage a broad plugin ecosystem to execute tasks using AWS resources best fit for each task.
