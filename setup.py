@@ -19,6 +19,7 @@
 # Relief from the License may be granted by purchasing a commercial license.
 
 import os
+import pip
 import site
 import sys
 
@@ -83,6 +84,16 @@ setup_info = {
 
 if __name__ == "__main__":
     setup(**setup_info)
-    if os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
-        os.remove("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY")
-    
+
+    if not os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
+        base_plugin_only = "False"
+    else:
+        with open("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY", "r") as f:
+            base_plugin_only = f.read().strip()
+
+    if base_plugin_only != "True":
+        with open("requirements-plugins-suite.txt") as f:
+            extra_plugins = f.read().splitlines()
+        
+        for plugin in required_plugins:
+            pip.main(['install', plugin])
