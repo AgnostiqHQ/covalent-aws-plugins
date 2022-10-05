@@ -32,16 +32,7 @@ with open("VERSION") as f:
 with open("requirements.txt") as f:
     required = f.read().splitlines()
 
-if not os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
-    base_plugin_only = "False"
-else:
-    with open("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY", "r") as f:
-        base_plugin_only = f.read().strip()
 
-if base_plugin_only != "True":
-    with open("requirements-plugins-suite.txt") as f:
-        required_plugins = f.read().splitlines()
-    required += required_plugins
 
 setup_info = {
     "name": "covalent-aws-plugins",
@@ -83,6 +74,16 @@ setup_info = {
 
 if __name__ == "__main__":
     setup(**setup_info)
+    if not os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
+    base_plugin_only = "False"
+else:
+    with open("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY", "r") as f:
+        base_plugin_only = f.read().strip()
+
+if base_plugin_only != "True":
+    with open("requirements-plugins-suite.txt") as f:
+        required_plugins = f.read().splitlines()
+        pip.main['install', plugin] for plugin in required_plugins
     if os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
         os.remove("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY")
     
