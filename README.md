@@ -15,7 +15,7 @@ Covalent is a python based workflow orchestration tool used to execute HPC and q
 
 By installing Covalent AWS Plugins users can leverage a broad plugin ecosystem to execute tasks using AWS resources best fit for each task.
 
-Covalent AWS Plugins installs a set of executor plugins that allow tasks to be run in an EC2 instance which is autoprovisioned, AWS Lambda, AWS Batch Compute Environment, and as an AWS Braket Job for tasks requiring Quantum devices.
+Covalent AWS Plugins installs a set of executor plugins that allow tasks to be run in an EC2 instance, AWS Lambda, AWS ECS Cluster, AWS Batch Compute Environment, and as an AWS Braket Job for tasks requiring Quantum devices.
 
 ## Installation
 
