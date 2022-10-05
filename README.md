@@ -11,13 +11,17 @@
 
 ## Covalent AWS Plugins
 
-<img src="./doc/static/covalent-ec2-code-example.png" width="400px" align="right">
+<img src="./doc/static/covalent-ec2-code-example.png" width="550px" align="right">
 
-Covalent is a python based workflow orchestration tool used to execute HPC and quantum tasks in heterogenous environments.
+[Covalent](https://github.com/AgnostiqHQ/covalent) is a python based workflow orchestration tool used to execute HPC and quantum tasks in heterogenous environments.
 
 By installing Covalent AWS Plugins users can leverage a broad plugin ecosystem to execute tasks using AWS resources best fit for each task.
 
 Covalent AWS Plugins installs a set of executor plugins that allow tasks to be run in an EC2 instance, AWS Lambda, AWS ECS Cluster, AWS Batch Compute Environment, and as an AWS Braket Job for tasks requiring Quantum devices.
+
+If you're new to covalent see visit our [Getting Started Guide](https://covalent.readthedocs.io/en/latest/getting_started/index.html).
+
+
 
 ## Installation
 
@@ -28,6 +32,7 @@ To use this plugin with Covalent, simply install it with `pip`:
 pip install covalent-aws-plugins
 ```
 
+> You may require [Docker](https://docs.docker.com/get-docker/) for Braket and [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) to be installed to use the Braket & EC2 plugins respectively.
 
 ## Included Plugins
 
