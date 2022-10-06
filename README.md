@@ -149,7 +149,7 @@ executor = ct.executor.AWSLambdaExecutor(
 
 ```python
 @ct.electron(
-	executor=executor
+    executor=executor
 )
 def compute_pi(n):
     # Leibniz formula for π
