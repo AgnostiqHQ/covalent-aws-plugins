@@ -25,8 +25,7 @@ If you're new to covalent visit our [Getting Started Guide](https://covalent.rea
 
 ## Installation
 
-
-To use this plugin with Covalent, simply install it with `pip`:
+To use the AWS plugin ecosystem with Covalent, simply install it with `pip`:
 
 ```bash
 pip install covalent-aws-plugins
@@ -41,10 +40,10 @@ While each plugin can be seperately installed installing the above pip package i
 | | Plugin Name | Use Case |
 |---|-------------|-------------|
 |![AWS Batch](./doc/static/Batch.png)| AWS Batch Executor |**Useful for heavy compute workloads (high CPU/memory).** Tasks are queued to execute in the user defined Batch compute environment.|
-|![AWS EC2](./doc/static/EC2.png)|AWS EC2 Executor|**General purpose compute workloads users can select compute resources.** An EC2 instance is auto-provisioned using terraform with selected compute settings to execute tasks.|
-|![AWS EC2](./doc/static/Braket.png)|AWS Braket Executor|**Suitable for Quantum/Classical hybrid workflows.** Tasks are executed using a combination of classical and quantum devices.|
-|![AWS EC2](./doc/static/ECS.png)|AWS ECS Executor|**Useful for moderate to heavy workloads (low memory requirements).** Tasks are executed in an AWS ECS cluster as containers.|
-|![AWS EC2](./doc/static/Lambda.png)|AWS Lambda Executor|**Suitable for short lived tasks that can be parallalized (low memory requirements).** Tasks are executed in serverless AWS Lambda functions.|
+|![AWS EC2](./doc/static/EC2.png)|AWS EC2 Executor|**General purpose compute workloads where users can select compute resources.** An EC2 instance is auto-provisioned using terraform with selected compute settings to execute tasks.|
+|![AWS Braket](./doc/static/Braket.png)|AWS Braket Executor|**Suitable for Quantum/Classical hybrid workflows.** Tasks are executed using a combination of classical and quantum devices.|
+|![AWS ECS](./doc/static/ECS.png)|AWS ECS Executor|**Useful for moderate to heavy workloads (low memory requirements).** Tasks are executed in an AWS ECS cluster as containers.|
+|![AWS Lambda](./doc/static/Lambda.png)|AWS Lambda Executor|**Suitable for short lived tasks that can be parallalized (low memory requirements).** Tasks are executed in serverless AWS Lambda functions.|
 
 ## Usage Example
 
@@ -95,7 +94,7 @@ executor=ct.executor.EC2Executor(
    Read more about how to use this executor in our [docs](https://covalent.readthedocs.io/en/latest/api/executors/awsbraket.html#usage-example). Below are the basics of how it can be used.
 
 ```python
-executor = BraketExecutor(
+executor = ct.executor.BraketExecutor(
     s3_bucket_name="braket_s3_bucket",
     ecr_repo_name="braket_ecr_repo",
     braket_job_execution_role_name="covalent-braket-iam-role",
@@ -134,7 +133,7 @@ executor = ct.executor.ECSExecutor(
    Read more about how to use this executor in our [docs](https://covalent.readthedocs.io/en/latest/api/executors/awslambda.html#usage-example). Below are the basics of how it can be used.
 
 ```python
-executor = AWSLambdaExecutor(
+executor = ct.executor.AWSLambdaExecutor(
     lambda_role_name="CovalentLambdaExecutionRole",
     s3_bucket_name="covalent-lambda-job-resources",
     timeout=60,
