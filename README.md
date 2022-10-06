@@ -19,7 +19,7 @@ By installing Covalent AWS Plugins users can leverage a broad plugin ecosystem t
 
 Covalent AWS Plugins installs a set of executor plugins that allow tasks to be run in an EC2 instance, AWS Lambda, AWS ECS Cluster, AWS Batch Compute Environment, and as an AWS Braket Job for tasks requiring Quantum devices.
 
-If you're new to covalent see visit our [Getting Started Guide](https://covalent.readthedocs.io/en/latest/getting_started/index.html).
+If you're new to covalent visit our [Getting Started Guide](https://covalent.readthedocs.io/en/latest/getting_started/index.html).
 
 
 
@@ -41,12 +41,18 @@ While each plugin can be seperately installed installing the above pip package i
 | | Plugin Name | Use Case |
 |---|-------------|-------------|
 |![AWS Batch](./doc/static/Batch.png)| AWS Batch Executor |**Useful for heavy compute workloads (high CPU/memory).** Tasks are queued to execute in the user defined Batch compute environment.|
-|![AWS EC2](./doc/static/EC2.png)|AWS EC2 Executor|**General purpose compute workloads users can select compute resources.** An EC2 instance is auto-provisioned using terraform with selected compute settings to execute workflow tasks.|
+|![AWS EC2](./doc/static/EC2.png)|AWS EC2 Executor|**General purpose compute workloads users can select compute resources.** An EC2 instance is auto-provisioned using terraform with selected compute settings to execute tasks.|
 |![AWS EC2](./doc/static/Braket.png)|AWS Braket Executor|**Suitable for Quantum/Classical hybrid workflows.** Tasks are executed using a combination of classical and quantum devices.|
-|![AWS EC2](./doc/static/ECS.png)|AWS ECS Executor|**Useful for moderate to heavy workloads (low memory requirements).** Covalent tasks are executed in containers within an AWS ECS cluster.|
+|![AWS EC2](./doc/static/ECS.png)|AWS ECS Executor|**Useful for moderate to heavy workloads (low memory requirements).** Tasks are executed in an AWS ECS cluster as containers.|
 |![AWS EC2](./doc/static/Lambda.png)|AWS Lambda Executor|**Suitable for short lived tasks that can be parallalized (low memory requirements).** Tasks are executed in serverless AWS Lambda functions.|
 
 ## Usage Examples
+
+- Firstly, import covalent.
+```python
+import covalent as ct
+```
+- Secondly, define your executor (expand any of the below plugins).
 
 <details>
   <summary>AWS Batch Executor</summary>
@@ -139,15 +145,10 @@ executor = AWSLambdaExecutor(
 
 ---
 
-To use the executors one simply requires importing the specific executor class and instantiating it with it's corresponding configuration values.
 
-A basic example of a workflow using executors is below.
+- Lastly, define a workflow to execute a particular task using one of the above executors
 
 ```python
-import covalent as ct
-
-executor = ... # see above for plugin examples
-
 @ct.electron(
 	executor=executor
 )
