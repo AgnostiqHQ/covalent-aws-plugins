@@ -31,7 +31,9 @@ To use the AWS plugin ecosystem with Covalent, simply install it with `pip`:
 pip install covalent-aws-plugins
 ```
 
-> You may require [Docker](https://docs.docker.com/get-docker/) for Braket and [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) to be installed to use the Braket & EC2 plugins respectively.
+This will ensure that all the AWS executor plugins listed below are installed.
+
+> You may require [Docker](https://docs.docker.com/get-docker/) and [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) to be installed to use the Braket & EC2 plugins respectively.
 
 ## Included Plugins
 
