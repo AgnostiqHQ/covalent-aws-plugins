@@ -46,7 +46,7 @@ While each plugin can be seperately installed installing the above pip package i
 |![AWS EC2](./doc/static/ECS.png)|AWS ECS Executor|**Useful for moderate to heavy workloads (low memory requirements).** Tasks are executed in an AWS ECS cluster as containers.|
 |![AWS EC2](./doc/static/Lambda.png)|AWS Lambda Executor|**Suitable for short lived tasks that can be parallalized (low memory requirements).** Tasks are executed in serverless AWS Lambda functions.|
 
-## Usage Examples
+## Usage Example
 
 - Firstly, import covalent.
 ```python
@@ -142,8 +142,6 @@ executor = AWSLambdaExecutor(
 )
 ```
 </details>
-
----
 
 
 - Lastly, define a workflow to execute a particular task using one of the above executors
