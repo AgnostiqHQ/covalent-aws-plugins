@@ -82,7 +82,7 @@ executor = ct.executor.AWSBatchExecutor(
    Read more about how to use this executor in our [docs](https://covalent.readthedocs.io/en/latest/api/executors/awsec2.html#usage-example). Below are the basics of how it can be used.
 
 ```python
-executor=ct.executor.EC2Executor(
+executor = ct.executor.EC2Executor(
 	instance_type="t2.micro",
 	volume_size=8, #GiB
 	ssh_key_file="~/.ssh/ec2_key"
