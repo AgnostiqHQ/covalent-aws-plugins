@@ -22,9 +22,9 @@ import os
 from typing import Dict, Union
 import boto3
 
-from covalent_aws_plugins.exceptions.client_exception import ClientError
-from covalent_aws_plugins.exceptions.invalid_credentials import InvalidCredentials
 from covalent.executor.executor_plugins.remote_executor import RemoteExecutor
+from .exceptions.client_exception import ClientError
+from .exceptions.invalid_credentials import InvalidCredentials
 
 """Base Executor class for all AWS Executor Plugins"""
 

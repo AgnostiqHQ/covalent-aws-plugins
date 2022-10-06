@@ -19,6 +19,7 @@
 # Relief from the License may be granted by purchasing a commercial license.
 
 import os
+import pip
 import site
 import sys
 
@@ -31,11 +32,6 @@ with open("VERSION") as f:
 
 with open("requirements.txt") as f:
     required = f.read().splitlines()
-
-if os.environ.get("BASE_COVALENT_AWS_PLUGINS_ONLY") != "True":
-    with open("requirements-plugins-suite.txt") as f:
-        required_plugins = f.read().splitlines()
-    required += required_plugins
 
 setup_info = {
     "name": "covalent-aws-plugins",
@@ -77,5 +73,16 @@ setup_info = {
 
 if __name__ == "__main__":
     setup(**setup_info)
-    os.system("export BASE_COVALENT_AWS_PLUGINS_ONLY=False")
-    
+
+    if not os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
+        base_plugin_only = "False"
+    else:
+        with open("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY", "r") as f:
+            base_plugin_only = f.read().strip()
+
+    if base_plugin_only != "True":
+        with open("requirements-plugins-suite.txt") as f:
+            required_plugins = f.read().splitlines()
+        
+        for plugin in required_plugins:
+            pip.main(['install', plugin])

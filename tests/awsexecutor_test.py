@@ -26,9 +26,10 @@ from unittest import mock
 
 import pytest
 
-from covalent_aws_plugins.awsexecutor import AWSExecutor
+import covalent
 from covalent_aws_plugins.exceptions.client_exception import ClientError
 from covalent_aws_plugins.exceptions.invalid_credentials import InvalidCredentials
+from covalent_aws_plugins.awsexecutor import AWSExecutor
 
 @pytest.fixture
 def MockAWSExecutor() -> AWSExecutor:
