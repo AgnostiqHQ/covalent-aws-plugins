@@ -25,6 +25,8 @@ import sys
 
 from setuptools import find_packages, setup
 
+BASE_PLUGINS_ONLY_FILEPATH = "/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"
+
 site.ENABLE_USER_SITE = "--user" in sys.argv[1:]
 
 with open("VERSION") as f:
@@ -72,12 +74,13 @@ setup_info = {
 }
 
 if __name__ == "__main__":
-    setup(**setup_info)
+    setup(**setup_info)  # Install base covalent-aws-plugins package.
 
-    if not os.path.exists("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"):
+    # Read from file whether covalent aws plugins need to be installed.
+    if not os.path.exists(BASE_PLUGINS_ONLY_FILEPATH):
         base_plugin_only = "False"
     else:
-        with open("/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY", "r") as f:
+        with open(BASE_PLUGINS_ONLY_FILEPATH, "r") as f:
             base_plugin_only = f.read().strip()
 
     if base_plugin_only != "True":
@@ -86,3 +89,7 @@ if __name__ == "__main__":
         
         for plugin in required_plugins:
             pip.main(['install', plugin])
+
+    # Removing the file to ensure that by default `pip install covalent-aws-plugins` downloads all the aws plugins.`
+    if os.path.exists(BASE_PLUGINS_ONLY_FILEPATH):
+        os.path.remove()

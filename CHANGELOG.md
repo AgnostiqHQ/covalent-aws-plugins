@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Fixed
+
+- `BASE_COVALENT_AWS_PLUGINS_ONLY` needs to be removed after all the installations are complete.
+
+### Changed
+
+- Pre-release versions of the plugins in the corresponding requirements file.
+
 ## [0.4.1] - 2022-10-05
 
 ### Fixed
