@@ -151,11 +151,12 @@ executor = AWSLambdaExecutor(
 	executor=executor
 )
 def compute_pi(n):
+    # Leibniz formula for π
     return 4 * sum(1.0/(2*i + 1)*(-1)**i for i in range(n))
 
 @ct.lattice
 def workflow(n):
-	return compute_pi(n)
+    return compute_pi(n)
 
 
 dispatch_id = ct.dispatch(workflow)(100000000)
