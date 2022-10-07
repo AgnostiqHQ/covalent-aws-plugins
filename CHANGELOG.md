@@ -12,6 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated README to reflect the fact that this plugin now installs each individual executor plugin
 - Added a few lines about the plugin ecosystem and covalent
 
+## [0.5.0] - 2022-10-06
+
+### Fixed
+
+- `BASE_COVALENT_AWS_PLUGINS_ONLY` needs to be removed after all the installations are complete.
+
+### Changed
+
+- Pre-release versions of the plugins in the corresponding requirements file.
+
 ## [0.4.1] - 2022-10-05
 
 ### Fixed
