@@ -37,7 +37,7 @@ This will ensure that all the AWS executor plugins listed below are installed.
 
 ## Included Plugins
 
-While each plugin can be seperately installed installing the above pip package installs all of the below plugins.
+While each plugin can be installed separately, `covalent-aws-plugins` pip package will automatically download all of the plugins listed below.
 
 | | Plugin Name | Use Case |
 |---|-------------|-------------|
