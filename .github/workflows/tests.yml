@@ -71,6 +71,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Python dependencies
+        run: |
+          pip install --no-cache-dir -r tests/requirements.txt
+
       - name: Build distribution
         run: python setup.py sdist
 
@@ -134,5 +138,6 @@ jobs:
     if: github.ref == 'refs/heads/develop' && needs.tests.outputs.release == 'true'
     uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/release.yml@develop
     secrets: inherit # pragma: allowlist secret
+
     with:
       prerelease: true
