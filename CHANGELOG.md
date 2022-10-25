@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Changed
+
+- Removed file based approach to distinguish plugin installs, simply use `extras_require` parameter in `setup_info`
+
 ## [0.6.2] - 2022-10-25
 
 ### Fixed
