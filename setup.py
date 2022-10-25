@@ -82,7 +82,3 @@ setup_info = {
 
 if __name__ == "__main__":
     setup(**setup_info)  # Install base covalent-aws-plugins package.
-
-    # Removing the file to ensure that by default `pip install covalent-aws-plugins` downloads all the aws plugins.`
-    if os.path.exists(BASE_PLUGINS_ONLY_FILEPATH):
-        os.remove(BASE_PLUGINS_ONLY_FILEPATH)
