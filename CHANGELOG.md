@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Fixed
+
+- Make plugin version requirements more flexible.
+
 ## [0.6.1] - 2022-10-25
 
 ### Fixed
