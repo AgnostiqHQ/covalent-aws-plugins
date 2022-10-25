@@ -24,8 +24,6 @@ import sys
 
 from setuptools import find_packages, setup
 
-BASE_PLUGINS_ONLY_FILEPATH = "/tmp/BASE_COVALENT_AWS_PLUGINS_ONLY"
-
 site.ENABLE_USER_SITE = "--user" in sys.argv[1:]
 
 with open("VERSION") as f:
@@ -33,14 +31,6 @@ with open("VERSION") as f:
 
 with open("requirements.txt") as f:
     required = f.read().splitlines()
-
-# If a base plugin file exits, it is assumed that the content is "True".
-base_plugin_only = os.path.exists(BASE_PLUGINS_ONLY_FILEPATH)
-
-if not base_plugin_only:
-    with open("requirements-plugins-suite.txt") as f:
-        required_plugins = f.read().splitlines()
-        required += required_plugins
 
 setup_info = {
     "name": "covalent-aws-plugins",
@@ -57,6 +47,20 @@ setup_info = {
     "long_description_content_type": "text/markdown",
     "include_package_data": True,
     "install_requires": required,
+    "extras_require": {
+        "all": [
+            "covalent-awsbatch-plugin>=0.16.1rc0",
+            "covalent-ecs-plugin>=0.15.1rc0",
+            "covalent-ec2-plugin>=0.6.2rc0",
+            "covalent-awslambda-plugin>=0.11.2rc0",
+            "covalent-braket-plugin>=0.7.2rc0"
+        ],
+        "batch": "covalent-awsbatch-plugin>=0.16.1rc0",
+        "ec2": "covalent-ec2-plugin>=0.6.2rc0",
+        "lambda": "covalent-awslambda-plugin>=0.11.2rc0",
+        "braket": "covalent-braket-plugin>=0.7.2rc0",
+        "ecs": "covalent-ecs-plugin>=0.15.1rc0"
+    },
     "classifiers": [
         "Development Status :: 4 - Beta",
         "Environment :: Console",

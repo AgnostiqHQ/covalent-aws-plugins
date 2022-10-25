@@ -75,7 +75,6 @@ jobs:
 
       - name: Build distribution
         run: |
-          echo "True" > /tmp/BASE_COVALENT_AWS_PLUGINS_ONLY
           python setup.py sdist
 
       - name: Validate plugin
@@ -88,7 +87,6 @@ jobs:
 
       - name: Install plugin
         run: |
-          echo "True" > /tmp/BASE_COVALENT_AWS_PLUGINS_ONLY
           VERSION="$(cat ./VERSION)"
           pip install ./dist/covalent-aws-plugins-${VERSION}.tar.gz
 
