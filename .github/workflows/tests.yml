@@ -53,7 +53,7 @@ jobs:
           - os: macos-latest
             python-version: "3.10"
             experimental: false
-    env: 
+    env:
       BASE_COVALENT_AWS_PLUGINS_ONLY: "True"
     container: ${{ matrix.container }}
     continue-on-error: ${{ matrix.experimental }}
@@ -63,7 +63,7 @@ jobs:
       - name: Check out head
         uses: actions/checkout@v3
         with:
-          persist-credentials: false 
+          persist-credentials: false
 
       - name: Set up Python
         if: matrix.os == 'macos-latest'
@@ -71,14 +71,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Python dependencies
-        run: |
-          pip install --no-cache-dir -r requirements.txt
-          pip install --no-cache-dir -r tests/requirements.txt
-      
-      - name: Install Covalent
-        run: pip install covalent --pre
-               
       - name: Build distribution
         run: python setup.py sdist
 
@@ -93,6 +85,7 @@ jobs:
       - name: Install plugin
         run: |
           VERSION="$(cat ./VERSION)"
+          echo "True" >> /tmp/BASE_COVALENT_AWS_PLUGINS_ONLY
           pip install ./dist/covalent-aws-plugins-${VERSION}.tar.gz
 
       - name: Run tests
@@ -100,7 +93,7 @@ jobs:
 
       - name: Generate coverage report
         run: coverage xml -o coverage.xml
-      
+
       - name: Upload report to Codecov
         if: >
           matrix.os == 'ubuntu-latest'
@@ -135,11 +128,11 @@ jobs:
           fi
           echo "RELEASE=$release" >> $GITHUB_ENV
           echo "::set-output name=release::$release"
-         
+
   release:
     needs: tests
     if: github.ref == 'refs/heads/develop' && needs.tests.outputs.release == 'true'
     uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/release.yml@develop
-    secrets: inherit
+    secrets: inherit # pragma: allowlist secret
     with:
       prerelease: true
