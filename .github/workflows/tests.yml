@@ -92,6 +92,9 @@ jobs:
           echo "True" >> /tmp/BASE_COVALENT_AWS_PLUGINS_ONLY
           pip install ./dist/covalent-aws-plugins-${VERSION}.tar.gz
 
+      - name: List packages
+        run: pip list
+
       - name: Run tests
         run: PYTHONPATH=$PWD/tests pytest -vv tests/ --cov=covalent_aws_plugins
 
