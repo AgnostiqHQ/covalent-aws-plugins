@@ -19,7 +19,6 @@
 # Relief from the License may be granted by purchasing a commercial license.
 
 import os
-import pip
 import site
 import sys
 
@@ -34,6 +33,14 @@ with open("VERSION") as f:
 
 with open("requirements.txt") as f:
     required = f.read().splitlines()
+
+# If a base plugin file exits, it is assumed that the content is "True".
+base_plugin_only = os.path.exists(BASE_PLUGINS_ONLY_FILEPATH)
+
+if not base_plugin_only:
+    with open("requirements-plugins-suite.txt") as f:
+        required_plugins = f.read().splitlines()
+        required += required_plugins
 
 setup_info = {
     "name": "covalent-aws-plugins",
@@ -75,20 +82,6 @@ setup_info = {
 
 if __name__ == "__main__":
     setup(**setup_info)  # Install base covalent-aws-plugins package.
-
-    # Read from file whether covalent aws plugins need to be installed.
-    if not os.path.exists(BASE_PLUGINS_ONLY_FILEPATH):
-        base_plugin_only = "False"
-    else:
-        with open(BASE_PLUGINS_ONLY_FILEPATH, "r") as f:
-            base_plugin_only = f.read().strip()
-
-    if base_plugin_only != "True":
-        with open("requirements-plugins-suite.txt") as f:
-            required_plugins = f.read().splitlines()
-        
-        for plugin in required_plugins:
-            pip.main(['install', plugin])
 
     # Removing the file to ensure that by default `pip install covalent-aws-plugins` downloads all the aws plugins.`
     if os.path.exists(BASE_PLUGINS_ONLY_FILEPATH):
