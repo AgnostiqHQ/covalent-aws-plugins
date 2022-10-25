@@ -76,14 +76,19 @@ setup_info = {
 if __name__ == "__main__":
     setup(**setup_info)  # Install base covalent-aws-plugins package.
 
+
     # Read from file whether covalent aws plugins need to be installed.
     if not os.path.exists(BASE_PLUGINS_ONLY_FILEPATH):
+        print(f"Path not found!")
         base_plugin_only = "False"
     else:
         with open(BASE_PLUGINS_ONLY_FILEPATH, "r") as f:
+            print("Path found")
             base_plugin_only = f.read().strip()
+            print(f"base_plugin_only: {base_plugin_only}")
 
     if base_plugin_only != "True":
+        print(f"Base_plugin_only is not True")
         with open("requirements-plugins-suite.txt") as f:
             required_plugins = f.read().splitlines()
         
