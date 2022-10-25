@@ -87,8 +87,7 @@ if __name__ == "__main__":
             base_plugin_only = f.read().strip()
             print(f"base_plugin_only: {base_plugin_only}")
 
-    if base_plugin_only != "True":
-        print(f"Base_plugin_only is not True")
+    if not bool(base_plugin_only):
         with open("requirements-plugins-suite.txt") as f:
             required_plugins = f.read().splitlines()
         

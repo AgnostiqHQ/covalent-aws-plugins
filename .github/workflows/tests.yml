@@ -75,7 +75,7 @@ jobs:
 
       - name: Build distribution
         run: |
-          echo "True" >> /tmp/BASE_COVALENT_AWS_PLUGINS_ONLY
+          echo "True" > /tmp/BASE_COVALENT_AWS_PLUGINS_ONLY
           python setup.py sdist
 
       - name: Validate plugin
