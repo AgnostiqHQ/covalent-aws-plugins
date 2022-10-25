@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated version of covalent to covalent>=0.202.0,<0.3
+- Updated version of covalent to 0.202.0
 
 ### Docs
 
