@@ -1,2 +1,2 @@
-covalent==0.177.0.post1.dev0
+covalent>=0.202.0,<0.3
 boto3==1.24.35
