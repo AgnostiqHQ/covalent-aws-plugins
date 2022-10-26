@@ -28,7 +28,7 @@ If you're new to covalent visit our [Getting Started Guide](https://covalent.rea
 To use the AWS plugin ecosystem with Covalent, simply install it with `pip`:
 
 ```bash
-pip install covalent-aws-plugins
+pip install covalent-aws-plugins[all]
 ```
 
 This will ensure that all the AWS executor plugins listed below are installed.
