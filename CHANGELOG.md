@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.11.0] - 2022-10-27
+
 ### Changed
 
 - Updated requirements.txt to contain commas separating gte, and lt inequalities in covalent version
