@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.8.0] - 2022-10-27
+
 ### Added
 
 - Update individual plugin version in `setup.py`
