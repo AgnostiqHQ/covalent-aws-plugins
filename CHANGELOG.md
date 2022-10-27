@@ -11,6 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated README to contain new UX for installing plugins
 
+## [0.11.0] - 2022-10-27
+
+### Changed
+
+- Updated requirements.txt to contain commas separating gte, and lt inequalities in covalent version
+
+## [0.10.0] - 2022-10-27
+
+### Changed
+
+- Updated setup.py to contain commas separating gte, and lt inequalities in the plugin versions
+
+## [0.9.0] - 2022-10-27
+
+### Changed
+
+- Added Alejandro to paul blart
+
+## [0.8.0] - 2022-10-27
+
+### Added
+
+- Update individual plugin version in `setup.py`
+
 ## [0.7.0] - 2022-10-25
 
 ### Changed
