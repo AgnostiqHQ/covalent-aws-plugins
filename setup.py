@@ -49,17 +49,17 @@ setup_info = {
     "install_requires": required,
     "extras_require": {
         "all": [
-            "covalent-awsbatch-plugin>=0.21.0rc0<1",
-            "covalent-ecs-plugin>=0.19.0rc0<1",
-            "covalent-ec2-plugin>=0.8.1rc0<1",
-            "covalent-awslambda-plugin>=0.18.1rc0<1",
-            "covalent-braket-plugin>=0.9.0rc0<1"
+            "covalent-awsbatch-plugin>=0.11.0<1",
+            "covalent-ecs-plugin>=0.11.0<1",
+            "covalent-ec2-plugin>=0.4.0.post1<1",
+            "covalent-awslambda-plugin>=0.5.0<1",
+            "covalent-braket-plugin>=0.4.1<1"
         ],
-        "batch": "covalent-awsbatch-plugin>=0.21.0rc0<1",
-        "ec2": "covalent-ec2-plugin>=0.8.1rc0<1",
-        "lambda": "covalent-awslambda-plugin>=0.18.1rc0<1",
-        "braket": "covalent-braket-plugin>=0.9.0rc0<1",
-        "ecs": "covalent-ecs-plugin>=0.18.0rc0<1"
+        "batch": "covalent-awsbatch-plugin>=0.11.0<1",
+        "ec2": "covalent-ec2-plugin>=0.4.0.post1<1",
+        "lambda": "covalent-awslambda-plugin>=0.5.0<1",
+        "braket": "covalent-braket-plugin>=0.4.1<1",
+        "ecs": "covalent-ecs-plugin>=0.11.0<1",
     },
     "classifiers": [
         "Development Status :: 4 - Beta",
