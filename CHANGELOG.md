@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Changed
+
+- Updated setup.py to contain commas seperating gte, and lt inequalities in the plugin versions
+
 ## [0.9.0] - 2022-10-27
 
 ### Changed
