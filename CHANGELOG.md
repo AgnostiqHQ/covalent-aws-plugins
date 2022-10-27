@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Changed
+
+- Added Alejandro to paul blart
+
 ## [0.8.0] - 2022-10-27
 
 ### Added
