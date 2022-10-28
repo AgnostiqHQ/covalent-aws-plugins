@@ -28,12 +28,14 @@ If you're new to covalent visit our [Getting Started Guide](https://covalent.rea
 To use the AWS plugin ecosystem with Covalent, simply install it with `pip`:
 
 ```bash
-pip install covalent-aws-plugins[all]
+pip install "covalent-aws-plugins[all]"
 ```
+
+⚠️You must include [all] in order to install all of the AWS plugins
 
 This will ensure that all the AWS executor plugins listed below are installed.
 
-> You may require [Docker](https://docs.docker.com/get-docker/) and [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) to be installed to use the Braket & EC2 plugins respectively.
+> You may require [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) to be installed to use the AWS EC2 plugin.
 
 ## Included Plugins
 
@@ -47,13 +49,14 @@ While each plugin can be installed separately, `covalent-aws-plugins` pip packag
 |![AWS ECS](./doc/static/ECS.png)|AWS ECS Executor|**Useful for moderate to heavy workloads (low memory requirements).** Tasks are executed in an AWS ECS cluster as containers.|
 |![AWS Lambda](./doc/static/Lambda.png)|AWS Lambda Executor|**Suitable for short lived tasks that can be parallalized (low memory requirements).** Tasks are executed in serverless AWS Lambda functions.|
 
-## Usage Example
+## Usage
 
-- Firstly, import covalent.
+Firstly, **import covalent**.
+
 ```python
 import covalent as ct
 ```
-- Secondly, define your executor (expand any of the below plugins).
+Secondly, **define your executor(s)** (expand any of the below plugins).
 
 <details>
   <summary>AWS Batch Executor</summary>

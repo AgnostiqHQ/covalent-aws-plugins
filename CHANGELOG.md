@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Documentation
+
+- Added warning about not including [all] to install plugins, minor adjustments.
+
 ## [0.12.0] - 2022-10-28
 
 ### Changed
