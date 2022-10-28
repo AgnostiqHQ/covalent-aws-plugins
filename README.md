@@ -37,6 +37,8 @@ This will ensure that all the AWS executor plugins listed below are installed.
 
 > You may require [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) to be installed to use the AWS EC2 plugin.
 
+Please read our [read the docs (RTD)](https://covalent.readthedocs.io/en/latest/api/executors/awsplugins.html) guide for more detailed information about using AWS plugins.
+
 ## Included Plugins
 
 While each plugin can be installed separately, `covalent-aws-plugins` pip package will automatically download all of the plugins listed below.
