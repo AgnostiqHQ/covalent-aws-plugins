@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- Added reference to RTD of aws plugins
 - Added warning about not including [all] to install plugins, minor adjustments.
 
 ## [0.12.0] - 2022-10-28
