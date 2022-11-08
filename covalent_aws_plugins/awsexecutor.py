@@ -90,15 +90,32 @@ class AWSExecutor(RemoteExecutor):
         Returns a dictionary of kwargs to populate a new boto3.Session() instance with proper auth, region, and profile options.
         """
         session_options = {}
+        if self.execution_role:
+            sts_client = boto3.client('sts')
+            # Get caller account Id
+            accoutId = sts_client.get_caller_identity()['Account']
+            assumed_role_object = sts_client.assume_role(
+                    RoleArn=f"arn:aws:iam::{accountId}:role/{self.execution_role}",
+                    RoleSessionName="AssumedExecutionRole")
+
+            creds = assumed_role_object['Credentials']
+            session_options["aws_access_key_id"] = creds['AccessKeyId']
+            session_options["aws_secret_access_key"] = creds['SecretAccessKey']
+            session_options["aws_session_token"] = creds["SessionToken"]
+            return session_options
+
         if self.profile:
             session_options["profile_name"] = self.profile
+
         if self.region:
             session_options["region_name"] = self.region
+
         return session_options
+
 
     def _validate_credentials(self, raise_exception = True) -> Union[Dict[str, str], bool]:
         """
-        Validate AWS Credentials from supplied profile and credentials file
+        Validate supplied AWS credentials
 
         Args:
             raises_exception: Boolean to determine if exception should be raised if AWS STS Client get_caller_identity() fails
