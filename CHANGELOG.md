@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Changed
+
+- Not setting default AWS_SHARED_CREDENTIALS, using AWS_REGION then AWS_DEFAULT_REGION if not defined.
+
 ### Documentation
 
 - Added reference to RTD of aws plugins

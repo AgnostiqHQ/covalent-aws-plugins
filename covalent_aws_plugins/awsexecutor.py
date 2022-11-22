@@ -29,6 +29,7 @@ from .exceptions.invalid_credentials import InvalidCredentials
 """Base Executor class for all AWS Executor Plugins"""
 
 class AWSExecutor(RemoteExecutor):
+
     """
     AWSExecutor which provides a base class for all other AWS Executors to inherit from.
 
@@ -48,23 +49,10 @@ class AWSExecutor(RemoteExecutor):
         self.execution_role = execution_role
         self.log_group_name = log_group_name
 
-        if s3_bucket_name:
-            self.s3_bucket_name = s3_bucket_name
-
-        if region:
-            self.region = region
-        else:
-            self.region = os.getenv("AWS_DEFAULT_REGION")
-
-        if profile:
-            self.profile = profile
-        else:
-            self.profile = os.getenv("AWS_PROFILE")
-
-        if credentials_file:
-            self.credentials_file = credentials_file
-        else:
-            self.credentials_file = os.getenv("AWS_SHARED_CREDENTIALS_FILE", "~/.aws/credentials")
+        self.s3_bucket_name = s3_bucket_name
+        self.region = region
+        self.profile = profile
+        self.credentials_file = credentials_file
 
     @property
     def s3_bucket_name(self):
