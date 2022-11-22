@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.13.0] - 2022-11-22
+
 ### Changed
 
 - Not setting default AWS_SHARED_CREDENTIALS, using AWS_REGION then AWS_DEFAULT_REGION if not defined.
