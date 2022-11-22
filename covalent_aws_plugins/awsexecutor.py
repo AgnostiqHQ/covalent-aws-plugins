@@ -53,18 +53,12 @@ class AWSExecutor(RemoteExecutor):
 
         if region:
             self.region = region
-        else:
-            self.region = os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION")
 
         if profile:
             self.profile = profile
-        else:
-            self.profile = os.getenv("AWS_PROFILE")
 
         if credentials_file:
             self.credentials_file = credentials_file
-        else:
-            self.credentials_file = os.getenv("AWS_SHARED_CREDENTIALS_FILE")
 
     @property
     def s3_bucket_name(self):
