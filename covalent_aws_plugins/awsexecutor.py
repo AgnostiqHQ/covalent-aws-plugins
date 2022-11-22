@@ -47,18 +47,10 @@ class AWSExecutor(RemoteExecutor):
 
         self.execution_role = execution_role
         self.log_group_name = log_group_name
-
-        if s3_bucket_name:
-            self.s3_bucket_name = s3_bucket_name
-
-        if region:
-            self.region = region
-
-        if profile:
-            self.profile = profile
-
-        if credentials_file:
-            self.credentials_file = credentials_file
+        self.s3_bucket_name = s3_bucket_name
+        self.region = region
+        self.profile = profile
+        self.credentials_file = credentials_file
 
     @property
     def s3_bucket_name(self):
