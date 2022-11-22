@@ -29,6 +29,7 @@ from .exceptions.invalid_credentials import InvalidCredentials
 """Base Executor class for all AWS Executor Plugins"""
 
 class AWSExecutor(RemoteExecutor):
+
     """
     AWSExecutor which provides a base class for all other AWS Executors to inherit from.
 
@@ -47,6 +48,7 @@ class AWSExecutor(RemoteExecutor):
 
         self.execution_role = execution_role
         self.log_group_name = log_group_name
+
         self.s3_bucket_name = s3_bucket_name
         self.region = region
         self.profile = profile

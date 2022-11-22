@@ -55,14 +55,6 @@ def MockAWSExecutor() -> AWSExecutor:
         async def run(self, function, args, kwargs, task_metadata):
             pass
 
-    aws_executor = _MockAWSExecutor(
-        profile="default",
-        region="us-east-1",
-        s3_bucket_name="covalent-s3bucket",
-        execution_role="covalent_execution_role",
-        log_group_name="covalent-log-group",
-        credentials_file="~/.aws/some-config-file"
-    )
     return _MockAWSExecutor
 
 
@@ -99,19 +91,6 @@ class TestAWSExecutor:
         assert executor.credentials_file == str(mock_credentials_file.resolve())
         # test that env var has been set for boto client to pick up
         assert os.environ["AWS_SHARED_CREDENTIALS_FILE"] == str(mock_credentials_file.resolve())
-
-
-        # 2. test aws executor with AWS specific environment variables set
-
-        os.environ["AWS_PROFILE"] = self.MOCK_PROFILE
-        os.environ["AWS_SHARED_CREDENTIALS_FILE"] = str(mock_credentials_file.resolve())
-        os.environ["AWS_DEFAULT_REGION"] = self.MOCK_REGION
-
-        executor = MockAWSExecutor()
-
-        assert executor.profile == self.MOCK_PROFILE
-        assert executor.region == self.MOCK_REGION
-        assert executor.credentials_file == str(mock_credentials_file.resolve())
 
 
     @pytest.mark.parametrize("is_profile_defined,is_region_defined", [
