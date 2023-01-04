@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Operations
+
+- Adding `docker.yml` workflow to build and release stable/pre-release version of the base aws executor docker images to public ECR
+
+
 ## [0.13.0] - 2022-11-22
 
 ### Changed
