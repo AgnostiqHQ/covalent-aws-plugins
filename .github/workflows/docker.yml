@@ -21,6 +21,7 @@
 name: docker
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       stable_version:
@@ -60,6 +61,15 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - name: Checkout default branch
+        uses: actions/checkout@v2
+        if: >
+          github.event_name == 'push'
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: "${{ env.GITHUB_REF }}"
+
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -84,6 +94,23 @@ jobs:
           echo "TAG: $TAG"
           echo "TAG=$TAG" >> $GITHUB_ENV
 
+      - name: Test image build
+        if: github.event_name == "push"
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          files: Dockerfile
+          platforms: "linux/amd64"
+          push: false
+          build-args: |
+            COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
+            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
+            PRE_RELEASE=true
+          tags: |
+            public.ecr.aws/covalent/covalent-executor-base:latest
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+
       - name: Build and push pre-release image version
         if: >
           inputs.prerelease
@@ -96,8 +123,8 @@ jobs:
           platforms: "linux/amd64"
           push: true
           build-args: |
-            COVALENT_BASE_IMAGE="python:3.8-slim-bullseye"
-            COVALENT_PACKAGE_VERSION="covalent>=0.202.0,<1"
+            COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
+            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
             PRE_RELEASE=true
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:latest
@@ -115,7 +142,7 @@ jobs:
           platforms: "linux/amd64"
           push: true
           build-args: |
-            COVALENT_BASE_IMAGE="python:3.8-slim-bullseye"
-            COVALENT_PACKAGE_VERSION="covalent>=0.202.0,<1"
+            COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
+            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:stable
