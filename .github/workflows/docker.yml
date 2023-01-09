@@ -106,8 +106,8 @@ jobs:
             COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
             PRE_RELEASE=true
           tags: |
-            public.ecr.aws/covalent/covalent-aws-executor:latest
-            public.ecr.aws/covalent/covalent-aws-executor:${{ env.TAG }}
+            public.ecr.aws/covalent/covalent-executor-base:latest
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
 
       - name: Build stable version
         if: >
@@ -125,4 +125,4 @@ jobs:
             COVALENT_BASE_IMAGE=python:3.8-slim-buster
             COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
           tags: |
-            public.ecr.aws/covalent/covalent-aws-executor:stable
+            public.ecr.aws/covalent/covalent-executor-base:stable

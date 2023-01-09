@@ -74,5 +74,5 @@ jobs:
             COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
             PRE_RELEASE=true
           tags: |
-            public.ecr.aws/covalent/covalent-aws-executor:latest
-            public.ecr.aws/covalent/covalent-aws-executor:${{ env.TAG }}
+            public.ecr.aws/covalent/covalent-executor-base:latest
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
