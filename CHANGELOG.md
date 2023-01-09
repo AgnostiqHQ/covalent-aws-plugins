@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Changed
+
+- Update `docker.yml` with proper stable version attributes for worflow dispatch
+
 ### Fixed
 
 - Fixed Dockerfile and docker workflow syntax to build pre-release base executor images
