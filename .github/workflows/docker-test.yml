@@ -68,7 +68,7 @@ jobs:
           context: .
           files: Dockerfile
           platforms: "linux/amd64"
-          push: false
+          push: true
           build-args: |
             COVALENT_BASE_IMAGE=python:3.8-slim-buster
             COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
