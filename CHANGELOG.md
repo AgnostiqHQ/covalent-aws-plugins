@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.14.1] - 2023-01-20
+
 ### Fixed
 
 - Fixed Dockerfile to create /covalent folder
