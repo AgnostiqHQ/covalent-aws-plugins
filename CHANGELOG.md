@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.14.0] - 2023-01-20
+
 ### Changed
 
 - Update `docker.yml` with proper stable version attributes for worflow dispatch
