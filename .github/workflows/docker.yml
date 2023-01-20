@@ -24,10 +24,10 @@ on:
   workflow_dispatch:
     inputs:
       stable_version:
-        description: "Stable version number, e.g. 0.32.3"
+        description: "Version number, e.g. 0.32.3"
         type: string
-      test_release:
-        description: "Test the workflow but don't create the release. Uncheck this box to create a release."
+      prerelease:
+        description: "true: Create a prerelease. false: Create a stable release"
         required: true
         type: boolean
         default: true
@@ -49,29 +49,29 @@ jobs:
       - name: Check out release tag
         uses: actions/checkout@v2
         if: >
-          github.event == 'workflow_dispatch'
-          && github.event.inputs.stable_version
+          github.event_name == 'workflow_dispatch'
+          && inputs.stable_version
         with:
           persist-credentials: false
           fetch-depth: 0
-          ref: "v${{ github.event.inputs.stable_version }}"
+          ref: "v${{ inputs.stable_version }}"
 
-      - name: Checkout default branch
+      - name: Checkout default branch (develop)
         uses: actions/checkout@v2
         if: >
-          github.event == 'workflow_call'
-          && inputs.prerelease
+          inputs.prerelease
+          && github.event_name == 'workflow_call'
         with:
           persist-credentials: false
           fetch-depth: 0
 
       - name: Setup QEMU
-        uses: docker/setup-qemu-action@master
+        uses: docker/setup-qemu-action@v2
         with:
           platforms: "linux/amd64"
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@master
+        uses: docker/setup-buildx-action@v2
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -92,8 +92,6 @@ jobs:
       - name: Build and push pre-release image version
         if: >
           inputs.prerelease
-          && github.event == 'workflow_call'
-          && !github.event.inputs.stable_version
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -102,16 +100,18 @@ jobs:
           platforms: "linux/amd64"
           push: true
           build-args: |
-            COVALENT_BASE_IMAGE="public.ecr.aws/covalent/covalent:latest"
+            COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
+            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
+            PRE_RELEASE=true
           tags: |
-            public.ecr.aws/covalent/covalent-aws-executor:latest
-            public.ecr.aws/covalent/covalent-aws-executor:${{ env.TAG }}
+            public.ecr.aws/covalent/covalent-executor-base:latest
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
 
-      - name: Build stable version
+      - name: Build and push stable version
         if: >
           !inputs.prerelease
-          && github.event == 'workflow_dispatch'
-          && github.event.inputs.stable_version
+          && github.event_name == 'workflow_dispatch'
+          && inputs.stable_version
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -120,6 +120,7 @@ jobs:
           platforms: "linux/amd64"
           push: true
           build-args: |
-            COVALENT_BASE_IMAGE="public.ecr.aws/covalent/covalent:stable"
+            COVALENT_BASE_IMAGE=python:3.8-slim-buster
+            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
           tags: |
-            public.ecr.aws/covalent/covalent-aws-executor:stable
+            public.ecr.aws/covalent/covalent-executor-base:stable

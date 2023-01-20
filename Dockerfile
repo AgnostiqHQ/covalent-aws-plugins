@@ -21,10 +21,18 @@
 ARG COVALENT_BASE_IMAGE
 FROM ${COVALENT_BASE_IMAGE}
 
+ARG COVALENT_PACKAGE_VERSION
+ARG PRE_RELEASE
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends rsync \
   && rm -rf /var/lib/apt/lists/* \
   && pip install boto3
+
+RUN if [ -z "$PRE_RELEASE" ]; then \
+	pip install $COVALENT_PACKAGE_VERSION; else \
+	pip install --pre $COVALENT_PACKAGE_VERSION; \
+	fi
 
 RUN cat <<EOF > /covalent/exec.py
 import os
