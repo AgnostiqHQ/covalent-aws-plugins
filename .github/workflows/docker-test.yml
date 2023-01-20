@@ -21,7 +21,23 @@
 name: docker
 
 on:
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      stable_version:
+        description: "Version number, e.g. 0.32.3"
+        type: string
+      prerelease:
+        description: "true: Create a prerelease. false: Create a stable release"
+        required: true
+        type: boolean
+        default: true
+  workflow_call:
+    inputs:
+      prerelease:
+        description: "true: Create a prerelease. false: Create a stable release"
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   docker:
@@ -32,10 +48,22 @@ jobs:
     steps:
       - name: Check out release tag
         uses: actions/checkout@v2
+        if: >
+          github.event_name == 'workflow_dispatch'
+          && inputs.stable_version
         with:
           persist-credentials: false
           fetch-depth: 0
-          ref: "32-create-workflow-to-build-and-release-base-docker-executor-images-update"
+          ref: "v${{ inputs.stable_version }}"
+
+      - name: Checkout default branch (develop)
+        uses: actions/checkout@v2
+        if: >
+          inputs.prerelease
+          && github.event_name == 'workflow_call'
+        with:
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@master
@@ -62,6 +90,8 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
 
       - name: Build and push pre-release image version
+        if: >
+          inputs.prerelease
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -76,3 +106,21 @@ jobs:
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:latest
             public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+
+      - name: Build and push stable release
+        if: >
+          !inputs.prerelease
+          && github.event_name == 'workflow_dispatch'
+          && inputs.stable_version
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          files: Dockerfile
+          platforms: "linux/amd64"
+          push: true
+          build-args: |
+            COVALENT_BASE_IMAGE=python:3.8-slim-buster
+            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
+          tags: |
+            public.ecr.aws/covalent/covalent-executor-base:stable
