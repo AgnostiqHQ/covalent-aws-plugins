@@ -7,10 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
-### Added
-
-- Add `push` trigger to enable workflow testing
-
 ### Changed
 
 - Update `docker.yml` with proper stable version attributes for worflow dispatch
