@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.15.0] - 2023-01-23
+
 ### Changed
 
 - Moved base executor image python script into covalent_aws_plugins/exec.py from Dockerfile
