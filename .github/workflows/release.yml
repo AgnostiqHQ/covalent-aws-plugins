@@ -192,5 +192,8 @@ jobs:
       && github.event == 'workflow_call'
     uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/docker.yml@develop
     secrets: inherit
+    steps:
+      - name: Log
+         echo inputs.prerelease 
     with:
       prerelease: inputs.prerelease
