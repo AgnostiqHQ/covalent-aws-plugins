@@ -198,6 +198,6 @@ jobs:
     secrets: inherit
     steps:
       - name: Log
-         echo inputs.prerelease 
+      - run: echo inputs.prerelease 
     with:
       prerelease: inputs.prerelease
