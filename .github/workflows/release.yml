@@ -53,7 +53,7 @@ jobs:
     steps:
       - name: Log
         run: | 
-            echo inputs.prerelease 
+          echo inputs.prerelease 
 
       - name: Check out release tag
         uses: actions/checkout@v2
@@ -196,8 +196,5 @@ jobs:
       && github.event == 'workflow_call'
     uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/docker.yml@develop
     secrets: inherit
-    steps:
-      - name: Log
-      - run: echo inputs.prerelease 
     with:
       prerelease: inputs.prerelease
