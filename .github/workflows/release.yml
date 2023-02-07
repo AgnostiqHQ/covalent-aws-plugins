@@ -193,4 +193,4 @@ jobs:
     uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/docker.yml@develop
     secrets: inherit
     with:
-      prerelease: inputs.prerelease
+      prerelease: ${{ inputs.prerelease }}
