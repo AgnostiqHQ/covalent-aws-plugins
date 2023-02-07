@@ -21,6 +21,8 @@
 name: docker
 
 on:
+  repository_dispatch:
+    types: ["prerelease", "stable"]
   workflow_dispatch:
     inputs:
       stable_version:
@@ -56,11 +58,21 @@ jobs:
           fetch-depth: 0
           ref: "v${{ inputs.stable_version }}"
 
+      - name: Checkout release tag (repository_dispatch)
+        uses: actions/checkout@v2
+        if: >
+          github.event_name == 'repository_dispatch'
+          && github.event.action == 'stable'
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: "v${{ github.event.client_payload.stable_version }}"
+
       - name: Checkout default branch (develop)
         uses: actions/checkout@v2
         if: >
-          inputs.prerelease
-          && github.event_name == 'workflow_call'
+          (inputs.prerelease && github.event_name == 'workflow_call')
+          || (github.event_name == 'repository_dispatch' && github.event.action == 'prerelease')
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -92,6 +104,7 @@ jobs:
       - name: Build and push pre-release image version
         if: >
           inputs.prerelease
+          !! (github.event_name == 'repository_dispatch' && github.event.action == 'prerelease')
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -109,9 +122,8 @@ jobs:
 
       - name: Build and push stable version
         if: >
-          !inputs.prerelease
-          && github.event_name == 'workflow_dispatch'
-          && inputs.stable_version
+          (!inputs.prerelease && github.event_name == 'workflow_dispatch' && inputs.stable_version)
+          || (github.event_name == 'repository_dispatch' && github.event.action == 'stable')
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
