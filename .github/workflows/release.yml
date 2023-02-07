@@ -193,7 +193,7 @@ jobs:
     if: >
       github.ref == 'refs/heads/develop'
       && github.event == 'workflow_call'
-    uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/docker.yml@develop
+    uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/docker.yml@i-38-fix-broken-test-workflow
     secrets: inherit
     # with:
     #   prerelease: ${{ inputs.prerelease }}
