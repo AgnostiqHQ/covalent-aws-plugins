@@ -137,7 +137,7 @@ jobs:
   release:
     needs: tests
     if: github.ref == 'refs/heads/develop' && needs.tests.outputs.release == 'true'
-    uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/release.yml@develop
+    uses: AgnostiqHQ/covalent-aws-plugins/.github/workflows/release.yml@i-38-fix-broken-test-workflow
     secrets: inherit # pragma: allowlist secret
 
     with:
