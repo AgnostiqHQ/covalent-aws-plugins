@@ -132,6 +132,7 @@ jobs:
           if [ "$MASTER_VERSION" = "$VERSION" ] ; then
             echo "$VERSION has been previously released."
           else
+            git config --global --add safe.directory $PWD
             git config user.name "CovalentOpsBot"
             git config user.email "covalentopsbot@users.noreply.github.com"
             git remote set-url origin https://${{ secrets.COVALENT_OPS_BOT_TOKEN }}@github.com/AgnostiqHQ/covalent-aws-plugins.git
