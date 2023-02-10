@@ -58,6 +58,13 @@ jobs:
     outputs:
       release: ${{ steps.push.outputs.release }}
     steps:
+      - name: Update git version
+        if: matrix.container.image == 'centos/python-38-centos7'
+        run: |
+          yum remove -y git git-*
+          yum install -y https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
+          yum install -y git
+
       - name: Check out head
         uses: actions/checkout@v3
         with:
@@ -125,6 +132,7 @@ jobs:
           if [ "$MASTER_VERSION" = "$VERSION" ] ; then
             echo "$VERSION has been previously released."
           else
+            git config --global --add safe.directory $PWD
             git config user.name "CovalentOpsBot"
             git config user.email "covalentopsbot@users.noreply.github.com"
             git remote set-url origin https://${{ secrets.COVALENT_OPS_BOT_TOKEN }}@github.com/AgnostiqHQ/covalent-aws-plugins.git
