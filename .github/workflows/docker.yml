@@ -21,12 +21,16 @@
 name: docker
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       version:
         description: "AWS Plugins version number, e.g. 0.32.3"
         type: string
+      covalent_version:
+        required: false
+        description: "Covalent pip package, e.g. covalent>=0.202.0,<1 or covalent==0.202.0"
+        type: string
+        default: "covalent>=0.202.0,<1"
       prerelease:
         description: "true: Create a prerelease. false: Create a stable release"
         required: true
@@ -39,6 +43,11 @@ on:
         required: true
         type: boolean
         default: true
+      covalent_version:
+        required: false
+        description: "Covalent pip package, e.g. covalent>=0.202.0,<1 or covalent==0.202.0"
+        type: string
+        default: "covalent>=0.202.0,<1"
 
 jobs:
   docker:
@@ -49,7 +58,7 @@ jobs:
     env:
       prerelease: true
       version: ${{ inputs.stable_verion }}
-      covalent_version: "covalent==0.220.0rc0"
+      covalent_version: ${{ inputs.covalent_version }}
     steps:
       - name: Check out release tag
         uses: actions/checkout@v2
@@ -111,7 +120,7 @@ jobs:
           echo "Minor version: $minor_version"
           echo "Patch version: $patch_version"
 
-          COV_VER_TAG="$major_version-$minor_version-$patch_version"
+          COV_VER_TAG="$major_version.$minor_version.$patch_version"
 
           echo "COV_VER_TAG: $COV_VER_TAG"
           echo "COV_VER_TAG=$COV_VER_TAG" >> $GITHUB_ENV
@@ -129,26 +138,25 @@ jobs:
           build-args: |
             COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
             COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
-            PRE_RELEASE=false
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:latest
             public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
             public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
 
-      # - name: Build and push stable version
-      #   if: >
-      #     !env.prerelease
-      #     && github.event_name == 'workflow_dispatch'
-      #     && env.version
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     files: Dockerfile
-      #     platforms: "linux/amd64"
-      #     push: true
-      #     build-args: |
-      #       COVALENT_BASE_IMAGE=python:3.8-slim-buster
-      #       COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
-      #     tags: |
-      #       public.ecr.aws/covalent/covalent-executor-base:stable
+      - name: Build and push stable version
+        if: >
+          !env.prerelease
+          && github.event_name == 'workflow_dispatch'
+          && env.version
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          files: Dockerfile
+          platforms: "linux/amd64"
+          push: true
+          build-args: |
+            COVALENT_BASE_IMAGE=python:3.8-slim-buster
+            COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
+          tags: |
+            public.ecr.aws/covalent/covalent-executor-base:stable
