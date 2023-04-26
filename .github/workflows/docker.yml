@@ -49,7 +49,7 @@ jobs:
     env:
       prerelease: true
       version: ${{ inputs.stable_verion }}
-      covalent_version: "covalent>=0.202.0,<1"
+      covalent_version: "covalent==0.220.0rc0"
     steps:
       - name: Check out release tag
         uses: actions/checkout@v2
