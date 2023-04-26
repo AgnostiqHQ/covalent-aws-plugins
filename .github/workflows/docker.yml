@@ -48,7 +48,7 @@ jobs:
       contents: read
     env:
       prerelease: true
-      version: inputs.stable_verion
+      version: ${{ inputs.stable_verion }}
       covalent_version: "covalent>=0.202.0,<1"
     steps:
       - name: Check out release tag
