@@ -23,9 +23,14 @@ name: docker
 on:
   workflow_dispatch:
     inputs:
-      stable_version:
-        description: "Version number, e.g. 0.32.3"
+      version:
+        description: "AWS Plugins version number, e.g. 0.32.3"
         type: string
+      covalent_version:
+        required: false
+        description: "Covalent pip package, e.g. covalent>=0.202.0,<1 or covalent==0.202.0"
+        type: string
+        default: "covalent>=0.202.0,<1"
       prerelease:
         description: "true: Create a prerelease. false: Create a stable release"
         required: true
@@ -38,6 +43,11 @@ on:
         required: true
         type: boolean
         default: true
+      covalent_version:
+        required: false
+        description: "Covalent pip package, e.g. covalent>=0.202.0,<1 or covalent==0.202.0"
+        type: string
+        default: "covalent>=0.202.0,<1"
 
 jobs:
   docker:
@@ -45,22 +55,24 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    env:
+      prerelease: ${{ inputs.prerelease }}
+      version: ${{ inputs.stable_verion }}
+      covalent_version: ${{ inputs.covalent_version }}
     steps:
       - name: Check out release tag
         uses: actions/checkout@v2
         if: >
-          github.event_name == 'workflow_dispatch'
-          && inputs.stable_version
+          env.version
         with:
           persist-credentials: false
           fetch-depth: 0
-          ref: "v${{ inputs.stable_version }}"
+          ref: "v${{ env.version }}"
 
       - name: Checkout default branch (develop)
         uses: actions/checkout@v2
         if: >
-          inputs.prerelease
-          && github.event_name == 'workflow_call'
+          !env.version
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -72,6 +84,10 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.13"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -89,9 +105,29 @@ jobs:
           echo "TAG: $TAG"
           echo "TAG=$TAG" >> $GITHUB_ENV
 
+      - name: Generate Tag v2
+        run: |
+          pip install "${{ env.covalent_version }}"
+          package_info=$(pip show covalent)
+
+          package_version=$(echo "$package_info" | grep -E '^Version: ' | cut -d' ' -f2)
+
+          major_version=$(echo "$package_version" | sed -E 's/^([0-9]+)\..*$/\1/')
+          minor_version=$(echo "$package_version" | sed -E 's/^[0-9]+\.([0-9]+)\..*$/\1/')
+          patch_version=$(echo "$package_version" | sed -E 's/^[0-9]+.[0-9]+\.([0-9]+).*$/\1/')
+
+          echo "Major version: $major_version"
+          echo "Minor version: $minor_version"
+          echo "Patch version: $patch_version"
+
+          COV_VER_TAG="$major_version.$minor_version.$patch_version"
+
+          echo "COV_VER_TAG: $COV_VER_TAG"
+          echo "COV_VER_TAG=$COV_VER_TAG" >> $GITHUB_ENV
+
       - name: Build and push pre-release image version
         if: >
-          inputs.prerelease
+          env.prerelease
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -101,17 +137,17 @@ jobs:
           push: true
           build-args: |
             COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
-            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
-            PRE_RELEASE=true
+            COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:latest
             public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
 
       - name: Build and push stable version
         if: >
-          !inputs.prerelease
+          !env.prerelease
           && github.event_name == 'workflow_dispatch'
-          && inputs.stable_version
+          && env.version
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -121,6 +157,8 @@ jobs:
           push: true
           build-args: |
             COVALENT_BASE_IMAGE=python:3.8-slim-buster
-            COVALENT_PACKAGE_VERSION=covalent>=0.202.0,<1
+            COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:stable
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
