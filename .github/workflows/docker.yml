@@ -160,3 +160,5 @@ jobs:
             COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:stable
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
