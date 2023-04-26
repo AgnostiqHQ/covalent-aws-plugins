@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.16.0] - 2023-04-26
+
 ### Changed
 
 - Added configurable covalent version in `docker` workflow to build base executor image
