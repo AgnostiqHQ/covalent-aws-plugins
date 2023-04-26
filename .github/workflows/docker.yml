@@ -89,8 +89,26 @@ jobs:
       - name: Generate Tag
         run: |
           TAG="$(cat ./VERSION)"
+
+          pip install ${{ env.covalent_version }}
+          package_info=$(pip show covalent)
+
+          package_version=$(echo "$package_info" | grep -E '^Version: ' | cut -d' ' -f2)
+
+          major_version=$(echo "$package_version" | sed -E 's/^([0-9]+)\..*$/\1/')
+          minor_version=$(echo "$package_version" | sed -E 's/^[0-9]+\.([0-9]+)\..*$/\1/')
+          patch_version=$(echo "$package_version" | sed -E 's/^[0-9]+.[0-9]+\.([0-9]+).*$/\1/')
+
+          echo "Major version: $major_version"
+          echo "Minor version: $minor_version"
+          echo "Patch version: $patch_version"
+
+          COV_VER_TAG="$major_version-$minor_version-$patch_version"
+
+          echo "COV_VER_TAG: $COV_VER_TAG"
           echo "TAG: $TAG"
           echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "COV_VER_TAG=$COV_VER_TAG" >> $GITHUB_ENV
 
       - name: Build and push pre-release image version
         if: >
@@ -105,10 +123,11 @@ jobs:
           build-args: |
             COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
             COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
-            PRE_RELEASE=true
+            PRE_RELEASE=false
           tags: |
             public.ecr.aws/covalent/covalent-executor-base:latest
             public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+            public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
 
       # - name: Build and push stable version
       #   if: >
