@@ -24,8 +24,8 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      stable_version:
-        description: "Version number, e.g. 0.32.3"
+      version:
+        description: "AWS Plugins version number, e.g. 0.32.3"
         type: string
       prerelease:
         description: "true: Create a prerelease. false: Create a stable release"
@@ -48,24 +48,22 @@ jobs:
       contents: read
     env:
       prerelease: true
-      stable_version: inputs.stable_verion
+      version: inputs.stable_verion
       covalent_version: "covalent>=0.202.0,<1"
     steps:
       - name: Check out release tag
         uses: actions/checkout@v2
         if: >
-          github.event_name == 'workflow_dispatch'
-          && env.stable_version
+          env.version
         with:
           persist-credentials: false
           fetch-depth: 0
-          ref: "v${{ env.stable_version }}"
+          ref: "v${{ env.version }}"
 
       - name: Checkout default branch (develop)
         uses: actions/checkout@v2
         if: >
-          env.prerelease
-          && github.event_name == 'workflow_call'
+          !env.version
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -116,7 +114,7 @@ jobs:
       #   if: >
       #     !env.prerelease
       #     && github.event_name == 'workflow_dispatch'
-      #     && env.stable_version
+      #     && env.version
       #   uses: docker/build-push-action@v2
       #   with:
       #     builder: ${{ steps.buildx.outputs.name }}
