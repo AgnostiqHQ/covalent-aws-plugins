@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.16.1] - 2023-04-26
+
 ### Fixed
 
 - Fixed `docker` workflow referring to deprecated `stable_version` input
