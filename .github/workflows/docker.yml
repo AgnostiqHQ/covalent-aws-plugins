@@ -21,10 +21,11 @@
 name: docker
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       version:
-        description: "AWS Plugins version number, e.g. 0.32.3"
+        description: "AWS Braket version number, e.g. 0.32.3 - For dockerfile"
         type: string
       covalent_version:
         required: false
@@ -56,9 +57,9 @@ jobs:
       id-token: write
       contents: read
     env:
-      prerelease: ${{ inputs.prerelease }}
+      prerelease: true
       version: ${{ inputs.stable_verion }}
-      covalent_version: ${{ inputs.covalent_version }}
+      covalent_version: "covalent>=0.202.0,<1"
     steps:
       - name: Check out release tag
         uses: actions/checkout@v2
