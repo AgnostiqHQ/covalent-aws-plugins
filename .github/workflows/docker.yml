@@ -76,6 +76,10 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.13"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -89,7 +93,11 @@ jobs:
       - name: Generate Tag
         run: |
           TAG="$(cat ./VERSION)"
+          echo "TAG: $TAG"
+          echo "TAG=$TAG" >> $GITHUB_ENV
 
+      - name: Generate Tag v2
+        run: |
           pip install ${{ env.covalent_version }}
           package_info=$(pip show covalent)
 
@@ -106,8 +114,6 @@ jobs:
           COV_VER_TAG="$major_version-$minor_version-$patch_version"
 
           echo "COV_VER_TAG: $COV_VER_TAG"
-          echo "TAG: $TAG"
-          echo "TAG=$TAG" >> $GITHUB_ENV
           echo "COV_VER_TAG=$COV_VER_TAG" >> $GITHUB_ENV
 
       - name: Build and push pre-release image version
