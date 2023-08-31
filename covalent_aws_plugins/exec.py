@@ -1,4 +1,5 @@
 import contextlib
+import json
 import os
 import sys
 import traceback
@@ -62,7 +63,7 @@ stderr_tee = _TeeStream(sys.stderr, os.path.join("/covalent", "stderr.log"))
 result = None
 task_exception = None
 traceback_str = None
-exception_cls = None
+exception_class_name = None
 
 # Redirect stdout/stderr to tee streams.
 with contextlib.redirect_stdout(stdout_tee), contextlib.redirect_stderr(stderr_tee):
@@ -74,7 +75,7 @@ with contextlib.redirect_stdout(stdout_tee), contextlib.redirect_stderr(stderr_t
         # Collect error information.
         task_exception = exception
         traceback_str = traceback.format_exc()
-        exception_cls = type(exception)
+        exception_class_name = exception.__class__.__name__
 
     finally:
         # Close the log file streams.
@@ -88,7 +89,7 @@ with open(local_io_output_filename, "wb") as f, \
 
     stdout = f_out.read()
     stderr = f_err.read()
-    pickle.dump((stdout, stderr, traceback_str, exception_cls), f)
+    pickle.dump((stdout, stderr, traceback_str, exception_class_name), f)
 
 # Upload the local outputs file.
 s3.upload_file(local_io_output_filename, s3_bucket, io_output_filename)
