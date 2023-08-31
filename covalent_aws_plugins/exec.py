@@ -19,7 +19,8 @@ result_filename = os.environ["RESULT_FILENAME"]
 if not result_filename:
     raise ValueError("Environment variable RESULT_FILENAME was not found")
 
-io_output_filename = result_filename.replace("result", "output")
+io_output_filename = result_filename.rsplit('.', maxsplit=1)[0]
+io_output_filename = io_output_filename.replace("result", "io_output") + ".json"
 
 # Create files for function, result, and outputs.
 local_func_filename = os.path.join("/covalent", func_filename)
@@ -30,8 +31,8 @@ local_io_output_filename = os.path.join("/covalent", io_output_filename)
 s3 = boto3.client("s3")
 s3.download_file(s3_bucket, func_filename, local_func_filename)
 
-with open(local_func_filename, "rb") as f:
-    function, args, kwargs = pickle.load(f)
+with open(local_func_filename, "rb") as f_result:
+    function, args, kwargs = pickle.load(f_result)
 
 
 class _TeeStream:
@@ -82,14 +83,14 @@ with contextlib.redirect_stdout(stdout_tee), contextlib.redirect_stderr(stderr_t
         stdout_tee.close()
         stderr_tee.close()
 
-# Create the local outputs file.
-with open(local_io_output_filename, "wb") as f, \
-        open(stdout_tee.filename, "r", encoding="utf-8") as f_out, \
-        open(stderr_tee.filename, "r", encoding="utf-8") as f_err:
+# Create the local outputs file (no pickle for text).
+with open(local_io_output_filename, "w", encoding="utf-8") as f_io_output, \
+        open(stdout_tee.filename, "r", encoding="utf-8") as f_stdout, \
+        open(stderr_tee.filename, "r", encoding="utf-8") as f_stderr:
 
-    stdout = f_out.read()
-    stderr = f_err.read()
-    pickle.dump((stdout, stderr, traceback_str, exception_class_name), f)
+    stdout = f_stdout.read()
+    stderr = f_stderr.read()
+    json.dump((stdout, stderr, traceback_str, exception_class_name), f_io_output)
 
 # Upload the local outputs file.
 s3.upload_file(local_io_output_filename, s3_bucket, io_output_filename)
@@ -98,8 +99,8 @@ if task_exception is not None:
     raise task_exception
 
 # Create the local result file.
-with open(local_result_filename, "wb") as f:
-    pickle.dump(result, f)
+with open(local_result_filename, "wb") as f_result:
+    pickle.dump(result, f_result)
 
 # Upload the local result file.
 s3.upload_file(local_result_filename, s3_bucket, result_filename)
