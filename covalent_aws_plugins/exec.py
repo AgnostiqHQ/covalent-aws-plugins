@@ -6,7 +6,6 @@ import traceback
 import boto3
 import cloudpickle as pickle
 
-
 s3_bucket = os.environ["S3_BUCKET_NAME"]
 if not s3_bucket:
     raise ValueError("Environment variable S3_BUCKET_NAME was not found")
@@ -38,8 +37,9 @@ class _TeeStream:
 
     # Used for tee-ing stdout/stderr with file streams.
 
-    def __init__(self, *streams):
-        self.streams = streams
+    def __init__(self, stream, filename):
+        self.streams = (stream, open(filename, "w", encoding="utf-8"))
+        self.filename = filename
 
     def write(self, data):
         for stream in self.streams:
@@ -50,12 +50,14 @@ class _TeeStream:
         for stream in self.streams:
             stream.flush()
 
+    def close(self):
+        # Close the file stream opened in `__init__`.
+        self.streams[1].close()
+
 
 # Create tee streams to copy stdout/stderr to local files.
-stdout_log = os.path.join("/covalent", "stdout.log")
-stderr_log = os.path.join("/covalent", "stderr.log")
-stdout_tee = _TeeStream(sys.stdout, open(stdout_log, "w", encoding="utf-8"))
-stderr_tee = _TeeStream(sys.stderr, open(stderr_log, "w", encoding="utf-8"))
+stdout_tee = _TeeStream(sys.stdout, os.path.join("/covalent", "stdout.log"))
+stderr_tee = _TeeStream(sys.stderr, os.path.join("/covalent", "stderr.log"))
 
 result = None
 task_exception = None
@@ -76,13 +78,13 @@ with contextlib.redirect_stdout(stdout_tee), contextlib.redirect_stderr(stderr_t
 
     finally:
         # Close the log file streams.
-        stdout_tee.streams[1].close()
-        stderr_tee.streams[1].close()
+        stdout_tee.close()
+        stderr_tee.close()
 
 # Create the local outputs file.
 with open(local_io_output_filename, "wb") as f, \
-        open(stdout_log, "r", encoding="utf-8") as f_out, \
-        open(stderr_log, "r", encoding="utf-8") as f_err:
+        open(stdout_tee.filename, "r", encoding="utf-8") as f_out, \
+        open(stderr_tee.filename, "r", encoding="utf-8") as f_err:
 
     stdout = f_out.read()
     stderr = f_err.read()
