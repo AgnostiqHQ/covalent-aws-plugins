@@ -19,12 +19,12 @@ result_filename = os.environ["RESULT_FILENAME"]
 if not result_filename:
     raise ValueError("Environment variable RESULT_FILENAME was not found")
 
-output_filename = result_filename.replace("result", "output")
+io_output_filename = result_filename.replace("result", "output")
 
 # Create files for function, result, and outputs.
 local_func_filename = os.path.join("/covalent", func_filename)
 local_result_filename = os.path.join("/covalent", result_filename)
-local_outputs_filename = os.path.join("/covalent", output_filename)
+local_io_output_filename = os.path.join("/covalent", io_output_filename)
 
 # Load task function.
 s3 = boto3.client("s3")
@@ -80,7 +80,7 @@ with contextlib.redirect_stdout(stdout_tee), contextlib.redirect_stderr(stderr_t
         stderr_tee.streams[1].close()
 
 # Create the local outputs file.
-with open(local_outputs_filename, "wb") as f, \
+with open(local_io_output_filename, "wb") as f, \
         open(stdout_log, "r", encoding="utf-8") as f_out, \
         open(stderr_log, "r", encoding="utf-8") as f_err:
 
@@ -89,7 +89,7 @@ with open(local_outputs_filename, "wb") as f, \
     pickle.dump((stdout, stderr, traceback_str, exception_cls), f)
 
 # Upload the local outputs file.
-s3.upload_file(local_outputs_filename, s3_bucket, output_filename)
+s3.upload_file(local_io_output_filename, s3_bucket, io_output_filename)
 
 if task_exception is not None:
     raise task_exception
