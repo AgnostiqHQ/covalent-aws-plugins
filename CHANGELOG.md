@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.16.1] - 2023-04-26
 
+### Changed
+
+- The `exec.py` script to transfer outputs and exceptions, while preserving AWS logs output.
+
 ### Fixed
 
 - Fixed `docker` workflow referring to deprecated `stable_version` input
