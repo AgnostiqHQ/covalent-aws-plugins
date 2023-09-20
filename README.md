@@ -5,7 +5,7 @@
 <img src="./doc/static/AWS_Plugins.png" width=150%>
 
 [![covalent](https://img.shields.io/badge/covalent-0.177.0-purple)](https://github.com/AgnostiqHQ/covalent)
-[![agpl](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0.en.html)
+[![apache](https://img.shields.io/badge/License-Apache_License_2.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 
 </div>
 
@@ -191,4 +191,4 @@ Please use the following citation in any publications:
 
 ## License
 
-Covalent is licensed under the GNU Affero GPL 3.0 License. Covalent may be distributed under other licenses upon request. See the [LICENSE](https://github.com/AgnostiqHQ/covalent-braket-plugin/blob/main/LICENSE) file or contact the [support team](mailto:support@agnostiq.ai) for more details.
+Covalent is licensed under the Apache License 2.0. See the [LICENSE](https://github.com/AgnostiqHQ/covalent-braket-plugin/blob/main/LICENSE) file or contact the [support team](mailto:support@agnostiq.ai) for more details.
