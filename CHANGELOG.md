@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.17.0] - 2023-09-20
+
 ### Changed
 
 - Changed license to Apache
