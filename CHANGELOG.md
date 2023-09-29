@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.18.0] - 2023-09-29
+
 ### Changed
 
 - The `exec.py` script to transfer outputs and exceptions, while preserving AWS logs output.
