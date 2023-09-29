@@ -56,14 +56,14 @@ jobs:
       version: ${{ inputs.version }}
       covalent_version: ${{ inputs.covalent_version }}
     steps:
-      - name: Check out release tag
-        uses: actions/checkout@v2
-        if: >
-          env.version
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-          ref: "v${{ env.version }}"
+      # - name: Check out release tag
+      #   uses: actions/checkout@v2
+      #   if: >
+      #     env.version
+      #   with:
+      #     persist-credentials: false
+      #     fetch-depth: 0
+      #     ref: "v${{ env.version }}"
 
       - name: Checkout default branch (develop)
         uses: actions/checkout@v2
@@ -72,6 +72,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          ref: "qa-qelectron"
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v2
