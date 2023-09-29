@@ -28,8 +28,8 @@ RUN apt-get update \
   && pip install boto3
 
 RUN if [ -z "$PRE_RELEASE" ]; then \
-	pip install "covalent[qiskit, braket]==0.220.0.post2.dev0"; else \
-	pip install --pre "covalent[qiskit, braket]==0.220.0.post2.dev0"; \
+	pip install "$COVALENT_PACKAGE_VERSION"; else \
+	pip install --pre "$COVALENT_PACKAGE_VERSION"; \
 	fi
 
 COPY covalent_aws_plugins/exec.py /covalent/exec.py

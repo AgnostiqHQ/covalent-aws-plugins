@@ -128,7 +128,7 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          files: Dockerfile
+          file: Dockerfile
           platforms: "linux/amd64"
           push: true
           build-args: |
