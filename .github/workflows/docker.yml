@@ -97,7 +97,7 @@ jobs:
 
       - name: Generate Tag
         run: |
-          TAG="$(cat ./VERSION)"
+          TAG="$(cat ./VERSION)-qe"
           echo "TAG: $TAG"
           echo "TAG=$TAG" >> $GITHUB_ENV
 
@@ -116,7 +116,7 @@ jobs:
           echo "Minor version: $minor_version"
           echo "Patch version: $patch_version"
 
-          COV_VER_TAG="$major_version.$minor_version.$patch_version"
+          COV_VER_TAG="$major_version.$minor_version.$patch_version-qe"
 
           echo "COV_VER_TAG: $COV_VER_TAG"
           echo "COV_VER_TAG=$COV_VER_TAG" >> $GITHUB_ENV
@@ -135,7 +135,6 @@ jobs:
             COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
             COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
           tags: |
-            public.ecr.aws/covalent/covalent-executor-base:latest
             public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
             public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
 
