@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+### Fixed
+
+- Fixed pre-release flag, was being incorrectly set as truthy even if unchecked
+
 ## [0.19.0] - 2023-10-13
 
 ### Changed
