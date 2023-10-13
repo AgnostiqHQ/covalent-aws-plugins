@@ -52,7 +52,6 @@ jobs:
       id-token: write
       contents: read
     env:
-      prerelease: ${{ inputs.prerelease }}
       version: ${{ inputs.version }}
       covalent_version: ${{ inputs.covalent_version }}
     steps:
@@ -123,7 +122,7 @@ jobs:
 
       - name: Build and push pre-release image version
         if: >
-          env.prerelease
+          inputs.prerelease
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -141,7 +140,7 @@ jobs:
 
       - name: Build and push stable version
         if: >
-          !env.prerelease
+          !inputs.prerelease
           && github.event_name == 'workflow_dispatch'
           && env.version
         uses: docker/build-push-action@v2
