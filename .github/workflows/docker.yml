@@ -56,105 +56,121 @@ jobs:
       version: ${{ inputs.version }}
       covalent_version: ${{ inputs.covalent_version }}
     steps:
-      - name: Check out release tag
-        uses: actions/checkout@v2
-        if: >
-          env.version
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-          ref: "v${{ env.version }}"
-
-      - name: Checkout default branch (develop)
-        uses: actions/checkout@v2
-        if: >
-          !env.version
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v2
-        with:
-          platforms: "linux/amd64"
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.8.13"
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.ECR_PUBLIC_UPLOAD_ROLE }}
-          aws-region: us-east-1
-
-      - name: Login to Public registry
-        run: |
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
-
-      - name: Generate Tag
-        run: |
-          TAG="$(cat ./VERSION)"
-          echo "TAG: $TAG"
-          echo "TAG=$TAG" >> $GITHUB_ENV
-
-      - name: Generate Tag v2
-        run: |
-          pip install "${{ env.covalent_version }}"
-          package_info=$(pip show covalent)
-
-          package_version=$(echo "$package_info" | grep -E '^Version: ' | cut -d' ' -f2)
-
-          major_version=$(echo "$package_version" | sed -E 's/^([0-9]+)\..*$/\1/')
-          minor_version=$(echo "$package_version" | sed -E 's/^[0-9]+\.([0-9]+)\..*$/\1/')
-          patch_version=$(echo "$package_version" | sed -E 's/^[0-9]+.[0-9]+\.([0-9]+).*$/\1/')
-
-          echo "Major version: $major_version"
-          echo "Minor version: $minor_version"
-          echo "Patch version: $patch_version"
-
-          COV_VER_TAG="$major_version.$minor_version.$patch_version"
-
-          echo "COV_VER_TAG: $COV_VER_TAG"
-          echo "COV_VER_TAG=$COV_VER_TAG" >> $GITHUB_ENV
-
-      - name: Build and push pre-release image version
+      - name: Is env prerelease true
         if: >
           env.prerelease
-        uses: docker/build-push-action@v2
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          files: Dockerfile
-          platforms: "linux/amd64"
-          push: true
-          build-args: |
-            COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
-            COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
-          tags: |
-            public.ecr.aws/covalent/covalent-executor-base:latest
-            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
-            public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
-
-      - name: Build and push stable version
+        run: echo "yes"
+      - name: Is env prerelease false
         if: >
           !env.prerelease
-          && github.event_name == 'workflow_dispatch'
-          && env.version
-        uses: docker/build-push-action@v2
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          files: Dockerfile
-          platforms: "linux/amd64"
-          push: true
-          build-args: |
-            COVALENT_BASE_IMAGE=python:3.8-slim-buster
-            COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
-          tags: |
-            public.ecr.aws/covalent/covalent-executor-base:stable
-            public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
-            public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
+        run: echo "yes"
+      - name: Is inputs prerelease true
+        if: >
+          inputs.prerelease
+        run: echo "yes"
+      - name: Is inputs prerelease false
+        if: >
+          !inputs.prerelease
+        run: echo "yes"
+      # - name: Check out release tag
+      #   uses: actions/checkout@v2
+      #   if: >
+      #     env.version
+      #   with:
+      #     persist-credentials: false
+      #     fetch-depth: 0
+      #     ref: "v${{ env.version }}"
+
+      # - name: Checkout default branch (develop)
+      #   uses: actions/checkout@v2
+      #   if: >
+      #     !env.version
+      #   with:
+      #     persist-credentials: false
+      #     fetch-depth: 0
+
+      # - name: Setup QEMU
+      #   uses: docker/setup-qemu-action@v2
+      #   with:
+      #     platforms: "linux/amd64"
+
+      # - name: Setup Docker Buildx
+      #   uses: docker/setup-buildx-action@v2
+
+      # - uses: actions/setup-python@v4
+      #   with:
+      #     python-version: "3.8.13"
+
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     role-to-assume: ${{ secrets.ECR_PUBLIC_UPLOAD_ROLE }}
+      #     aws-region: us-east-1
+
+      # - name: Login to Public registry
+      #   run: |
+      #     aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+
+      # - name: Generate Tag
+      #   run: |
+      #     TAG="$(cat ./VERSION)"
+      #     echo "TAG: $TAG"
+      #     echo "TAG=$TAG" >> $GITHUB_ENV
+
+      # - name: Generate Tag v2
+      #   run: |
+      #     pip install "${{ env.covalent_version }}"
+      #     package_info=$(pip show covalent)
+
+      #     package_version=$(echo "$package_info" | grep -E '^Version: ' | cut -d' ' -f2)
+
+      #     major_version=$(echo "$package_version" | sed -E 's/^([0-9]+)\..*$/\1/')
+      #     minor_version=$(echo "$package_version" | sed -E 's/^[0-9]+\.([0-9]+)\..*$/\1/')
+      #     patch_version=$(echo "$package_version" | sed -E 's/^[0-9]+.[0-9]+\.([0-9]+).*$/\1/')
+
+      #     echo "Major version: $major_version"
+      #     echo "Minor version: $minor_version"
+      #     echo "Patch version: $patch_version"
+
+      #     COV_VER_TAG="$major_version.$minor_version.$patch_version"
+
+      #     echo "COV_VER_TAG: $COV_VER_TAG"
+      #     echo "COV_VER_TAG=$COV_VER_TAG" >> $GITHUB_ENV
+
+      # - name: Build and push pre-release image version
+      #   if: >
+      #     inputs.prerelease
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     files: Dockerfile
+      #     platforms: "linux/amd64"
+      #     push: true
+      #     build-args: |
+      #       COVALENT_BASE_IMAGE=python:3.8-slim-bullseye
+      #       COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
+      #     tags: |
+      #       public.ecr.aws/covalent/covalent-executor-base:latest
+      #       public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+      #       public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
+
+      # - name: Build and push stable version
+      #   if: >
+      #     !inputs.prerelease
+      #     && github.event_name == 'workflow_dispatch'
+      #     && env.version
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     files: Dockerfile
+      #     platforms: "linux/amd64"
+      #     push: true
+      #     build-args: |
+      #       COVALENT_BASE_IMAGE=python:3.8-slim-buster
+      #       COVALENT_PACKAGE_VERSION=${{ env.covalent_version }}
+      #     tags: |
+      #       public.ecr.aws/covalent/covalent-executor-base:stable
+      #       public.ecr.aws/covalent/covalent-executor-base:${{ env.TAG }}
+      #       public.ecr.aws/covalent/covalent-executor-base:${{ env.COV_VER_TAG }}
