@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED]
 
+## [0.19.0] - 2023-10-13
+
 ### Changed
 
 - Updated the minimum covalent version, and relaxed the boto3 version requirement
