@@ -41,7 +41,7 @@ def _upload_to_uri(data: bytes, s3_uri: str):
     s3_client.put_object(Bucket=bucket, Key=key, Body=data)
 
 
-def run_task_from_uris(
+def run_task_group(
     task_specs: List[Dict],
     resources: Dict,
     output_uris: List[Tuple[str, str, str, str]],
@@ -65,10 +65,8 @@ def run_task_from_uris(
 
     dispatch_id = task_group_metadata["dispatch_id"]
     task_ids = task_group_metadata["node_ids"]
-    gid = task_group_metadata["task_group_id"]
 
     os.environ["COVALENT_DISPATCH_ID"] = dispatch_id
-
     for i, task in enumerate(task_specs):
         result_uri, stdout_uri, stderr_uri, qelectron_db_uri = output_uris[i]
         summary_uri = summary_uris[i]
@@ -103,22 +101,13 @@ def run_task_from_uris(
                     ser_kwargs[key] = deserialize_node_asset(_download_from_uri(uri), "output")
 
                 # Load deps
-                deps_id = task["deps_id"]
-                deps_uri = resources["deps"][deps_id]
+                hooks_uri = resources["hooks"][task_id]
                 # Download from S3
-                deps_json = deserialize_node_asset(_download_from_uri(deps_uri), "deps")
+                hooks_json = deserialize_node_asset(_download_from_uri(hooks_uri), "hooks")
 
-                call_before_id = task["call_before_id"]
-                call_before_uri = resources["deps"][call_before_id]
-
-                # Download from S3
-                call_before_json = deserialize_node_asset(_download_from_uri(call_before_uri), "call_before")
-
-                call_after_id = task["call_after_id"]
-                call_after_uri = resources["deps"][call_after_id]
-
-                # Download from S3
-                call_after_json = deserialize_node_asset(_download_from_uri(call_after_uri), "call_after")
+                deps_json = hooks_json.get("deps", {})
+                call_before_json = hooks_json.get("call_before", [])
+                call_after_json = hooks_json.get("call_after", [])
 
                 # Assemble and invoke the task
                 call_before, call_after = _gather_deps(
@@ -134,6 +123,7 @@ def run_task_from_uris(
                     )
 
                 ser_output = serialize_node_asset(transportable_output, "output")
+                output_size = len(ser_output)
 
                 # Save output
                 # Upload to S3
@@ -149,15 +139,45 @@ def run_task_from_uris(
 
                 resources["inputs"][str(task_id)] = result_uri
 
+                qelectron_db_size = len(qelectron_db_bytes)
+
             except Exception as ex:
                 exception_occurred = True
+                result_uri = ""
+                output_size = 0
+                qelectron_db_uri = ""
+                qelectron_db_size = 0
                 tb = "".join(traceback.TracebackException.from_exception(ex).format())
                 print(tb, file=sys.stderr)
-                result_uri = None
-                qelectron_db_uri = None
                 break
 
             finally:
+                stdout.flush()
+                stderr.flush()
+                stdout_size = os.path.getsize(stdout_uri)
+                stderr_size = os.path.getsize(stderr_uri)
+
+                result_summary = {
+                    "node_id": task_id,
+                    "output": {
+                        "uri": result_uri,
+                        "size": output_size,
+                    },
+                    "stdout": {
+                        "uri": stdout_uri,
+                        "size": stdout_size,
+                    },
+                    "stderr": {
+                        "uri": stderr_uri,
+                        "size": stderr_size,
+                    },
+                    "qelectron_db": {
+                        "uri": qelectron_db_uri,
+                        "size": qelectron_db_size,
+                    },
+                    "exception_occurred": exception_occurred,
+                }
+
                 result_summary = {
                     "node_id": task_id,
                     "output_uri": result_uri,
@@ -201,7 +221,7 @@ def main():
     output_uris = json.loads(os.environ["COVALENT_OUTPUT_UPLOAD_URIS"])
     task_group_metadata = json.loads(os.environ["COVALENT_TASK_GROUP_METADATA"])
     summary_uris = json.loads(os.environ["COVALENT_SUMMARY_UPLOAD_URIS"])
-    run_task_from_uris(task_specs, resource_map, output_uris, summary_uris, task_group_metadata)
+    run_task_group(task_specs, resource_map, output_uris, summary_uris, task_group_metadata)
 
 
 if __name__ == "__main__":
