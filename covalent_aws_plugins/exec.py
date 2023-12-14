@@ -101,7 +101,7 @@ def run_task_group(
                     ser_kwargs[key] = deserialize_node_asset(_download_from_uri(uri), "output")
 
                 # Load deps
-                hooks_uri = resources["hooks"][task_id]
+                hooks_uri = resources["hooks"][str(task_id)]
                 # Download from S3
                 hooks_json = deserialize_node_asset(_download_from_uri(hooks_uri), "hooks")
 
@@ -154,8 +154,8 @@ def run_task_group(
             finally:
                 stdout.flush()
                 stderr.flush()
-                stdout_size = os.path.getsize(stdout_uri)
-                stderr_size = os.path.getsize(stderr_uri)
+                stdout_size = stdout.tell()
+                stderr_size = stderr.tell()
 
                 result_summary = {
                     "node_id": task_id,
@@ -175,15 +175,6 @@ def run_task_group(
                         "uri": qelectron_db_uri,
                         "size": qelectron_db_size,
                     },
-                    "exception_occurred": exception_occurred,
-                }
-
-                result_summary = {
-                    "node_id": task_id,
-                    "output_uri": result_uri,
-                    "stdout_uri": stdout_uri,
-                    "stderr_uri": stderr_uri,
-                    "qelectron_db_uri": qelectron_db_uri,
                     "exception_occurred": exception_occurred,
                 }
 
